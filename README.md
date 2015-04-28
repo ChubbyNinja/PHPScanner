@@ -141,3 +141,10 @@ There's a couple of things to notice above
 4. The `scan_details` now gives you a multidimensional array
     `vun_id` is the id in our definitions.php
     `vun_string` is the matched string
+    
+    
+    
+#### TODO
+
+1. Email webmaster with alerts with diagnostic and client information when PUP has been found
+2. Auto-Update definitions list
