@@ -18,7 +18,7 @@ require( 'path/to/PHPScanner/scanner.php' );
 ## Example Output
 There is no need to change how your uploads are handled (not even for WordPress, Joomla or other Content Management Systems).
 
-Here's an example output for `var_dump( $_FILES );`
+Here's an example output for `var_dump( $_FILES );` with a clean file
 
 ```
 array(1) {
@@ -50,3 +50,82 @@ As you can see, there are two additional keys `scan_results` and `scan_details`.
    **OK** - Scan completed and the file was considered clean
    
    **PUP** - Scan completed and the file was considered a Potentially Unwanted Program
+   
+2. `scan_details` is an array, if the file was considered a PUP, this array is filled with the strings matched
+   
+   It is then down to the Developer to programmatically decide if the file is indeed dangerous.
+   
+   
+Here's an example output for `var_dump( $_FILES );` with a PUP file
+
+```
+array(1) {
+  ["my_file"]=>
+  array(7) {
+    ["name"]=>
+    string(8) "test.txt"
+    ["type"]=>
+    string(10) "text/plain"
+    ["tmp_name"]=>
+    string(26) "/tmp/phpDrv7Jh_VIRUS_FOUND"
+    ["error"]=>
+    int(8)
+    ["size"]=>
+    int(165477)
+    ["scan_results"]=>
+    string(3) "PUP"
+    ["scan_details"]=>
+    array(7) {
+      [0]=>
+      array(2) {
+        ["vun_id"]=>
+        int(0)
+        ["vun_string"]=>
+        string(23) "-type f -name .htpasswd"
+      }
+      [1]=>
+      array(2) {
+        ["vun_id"]=>
+        int(2)
+        ["vun_string"]=>
+        string(7) "netstat"
+      }
+      [2]=>
+      array(2) {
+        ["vun_id"]=>
+        int(4)
+        ["vun_string"]=>
+        string(6) "find /"
+      }
+      [3]=>
+      array(2) {
+        ["vun_id"]=>
+        int(5)
+        ["vun_string"]=>
+        string(9) "ccteam.ru"
+      }
+      [4]=>
+      array(2) {
+        ["vun_id"]=>
+        int(10)
+        ["vun_string"]=>
+        string(6) "psyBNC"
+      }
+      [5]=>
+      array(2) {
+        ["vun_id"]=>
+        int(13)
+        ["vun_string"]=>
+        string(11) "/etc/passwd"
+      }
+      [6]=>
+      array(2) {
+        ["vun_id"]=>
+        int(14)
+        ["vun_string"]=>
+        string(23) "packetstormsecurity.org"
+      }
+    }
+  }
+}
+```
