@@ -7,13 +7,20 @@ This script is intended to be included at your php.ini level, example:
 auto_prepend_file =/etc/php5/extensions/PHPScanner/scanner.php
 ```
 
-The benefit of this, is you do not need to remember to include it for each project, as long as that project is running on the same web server this script will be included.
-
 You can alternatively include this manually in your PHP script
 ```
 <?php
 require( 'path/to/PHPScanner/scanner.php' );
 ```
+
+## php.ini vs require
+There are multiple benefits to including this script at php.ini level.
+
+1. You don't always have control over the upload scripts on your website, this is often the case with Content Management Systems that support 3rd party plugins, like Wordpress, Joomla, Drupal. PHPScanner will run before any other scripts get access to the files being uploaded. This ensures PHPScanner can take action **before** the malicious code is stored or executed.
+2. You don't have to remember to include PHPScanner when you create multiple websites (VirtualHosts)
+3. Probably more...
+
+
 
 ## Example Output
 There is no need to change how your uploads are handled (not even for WordPress, Joomla or other Content Management Systems).
