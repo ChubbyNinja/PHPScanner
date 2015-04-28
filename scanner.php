@@ -16,6 +16,7 @@
 	{
 		global $definitions;
 
+		if( !$arr['tmp_name'] ) { return $arr; }
 
 		$found = [];
 		$content = file_get_contents( $arr['tmp_name'] );
