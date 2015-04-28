@@ -6,8 +6,24 @@ This script is intended to be included at your php.ini level, example:
 ```
 auto_prepend_file =/etc/php5/extensions/PHPScanner/PHPScanner.php
 ```
+Please note: You can extract PHPScanner anywhere, but I like to collate them under `/etc/php5/extensions`
 
-You can alternatively include this manually in your PHP script
+
+## How to Install
+Via SSH/Terminal (requires root or prepend each command with `sudo`)
+1. `cd /etc/php5` - Move to the php5 directory
+2. `mkdir extensions` - Creates the extensions directory if it does not exist
+3. `cd extensions` - Move into the extensions directory
+4. `wget -O PHPScanner.zip https://github.com/ChubbyNinja/PHPScanner/archive/master.zip` - Download the PHPScanner
+5. `unzip PHPScanner.zip` - Unzip the PHPScanner (You may need to `apt-get install unzip`)
+6. `mv PHPScanner-master PHPScanner` - Rename the extracted folder
+7. `rm PHPScanner.zip` - Remove the archive
+8. `pico /etc/php5/apache2/php.ini` - Open up the php.ini file
+9. Find `auto_prepend_file` under Data Handling and replace with `auto_prepend_file =/etc/php5/extensions/PHPScanner/PHPScanner.php`
+10. `service apache2 restart` - restart apache2 to load PHPScanner.
+
+
+If you did not want to load PHPScanner through php.ini, you can simply download the PHPScanner and do the following:
 ```
 <?php
 require( 'path/to/PHPScanner/PHPScanner.php' );
