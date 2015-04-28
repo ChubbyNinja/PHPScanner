@@ -157,6 +157,132 @@ array(1) {
 }
 ```
 
+
+### Example 3 - multiple files attribute
+You can upload multiple files through one input box - PHPScanner takes this into consideration too.
+Here's an example output for `var_dump( $_FILES );`
+
+```
+array(2) {
+  ["my_files"]=>
+  array(7) {
+    ["name"]=>
+    array(2) {
+      [0]=>
+      string(8) "test.txt"
+      [1]=>
+      string(11) "Capture.JPG"
+    }
+    ["type"]=>
+    array(2) {
+      [0]=>
+      string(10) "text/plain"
+      [1]=>
+      string(10) "image/jpeg"
+    }
+    ["tmp_name"]=>
+    array(2) {
+      [0]=>
+      string(26) "/tmp/phpPPAuIS_VIRUS_FOUND"
+      [1]=>
+      string(14) "/tmp/phpr0GhA7"
+    }
+    ["error"]=>
+    array(2) {
+      [0]=>
+      int(8)
+      [1]=>
+      int(0)
+    }
+    ["size"]=>
+    array(2) {
+      [0]=>
+      int(165477)
+      [1]=>
+      int(127218)
+    }
+    ["scan_results"]=>
+    array(2) {
+      [0]=>
+      string(3) "PUP"
+      [1]=>
+      string(2) "OK"
+    }
+    ["scan_details"]=>
+    array(2) {
+      [0]=>
+      array(7) {
+        [0]=>
+        array(2) {
+          ["vun_id"]=>
+          int(0)
+          ["vun_string"]=>
+          string(23) "-type f -name .htpasswd"
+        }
+        [1]=>
+        array(2) {
+          ["vun_id"]=>
+          int(2)
+          ["vun_string"]=>
+          string(7) "netstat"
+        }
+        [2]=>
+        array(2) {
+          ["vun_id"]=>
+          int(4)
+          ["vun_string"]=>
+          string(6) "find /"
+        }
+        [3]=>
+        array(2) {
+          ["vun_id"]=>
+          int(5)
+          ["vun_string"]=>
+          string(9) "ccteam.ru"
+        }
+        [4]=>
+        array(2) {
+          ["vun_id"]=>
+          int(10)
+          ["vun_string"]=>
+          string(6) "psyBNC"
+        }
+        [5]=>
+        array(2) {
+          ["vun_id"]=>
+          int(13)
+          ["vun_string"]=>
+          string(11) "/etc/passwd"
+        }
+        [6]=>
+        array(2) {
+          ["vun_id"]=>
+          int(14)
+          ["vun_string"]=>
+          string(23) "packetstormsecurity.org"
+        }
+      }
+      [1]=>
+      array(0) {
+      }
+    }
+  }
+  ["test2"]=>
+  array(5) {
+    ["name"]=>
+    string(0) ""
+    ["type"]=>
+    string(0) ""
+    ["tmp_name"]=>
+    string(0) ""
+    ["error"]=>
+    int(4)
+    ["size"]=>
+    int(0)
+  }
+}
+```
+
 There's a couple of things to notice above
 
 1. As you can see, the `tmp_name` has been appended with `_VIRUS_FOUND` - the decision to do this instead of remove the file completely is to give you (the developer) the flexibility of deciding if you should continue. - The default action will be to fail
