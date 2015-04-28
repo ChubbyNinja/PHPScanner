@@ -155,3 +155,4 @@ There's a couple of things to notice above
 
 1. Email webmaster with diagnostic and client information when PUP has been found
 2. Auto-Update definitions list
+3. Trigger a manual scan of file
