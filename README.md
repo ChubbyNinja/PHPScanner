@@ -48,4 +48,5 @@ As you can see, there are two additional keys `scan_results` and `scan_details`.
 1. `scan_results` is a string, with two values available
 
    **OK** - Scan completed and the file was considered clean
+   
    **PUP** - Scan completed and the file was considered a Potentially Unwanted Program
