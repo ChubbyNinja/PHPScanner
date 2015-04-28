@@ -1,7 +1,7 @@
 # PHPScanner
 PHPScanner is a small and simple script which scans uploaded content for known scripts like c99 before your PHP script handles the request
 
-# Usage
+## Usage
 This script is intended to be included at your php.ini level, example:
 ```
 auto_prepend_file =/etc/php5/extensions/PHPScanner/scanner.php
@@ -15,7 +15,7 @@ You can alternatively include this manually in your PHP script
 require( 'path/to/PHPScanner/scanner.php' );
 ```
 
-# Example Output
+## Example Output
 There is no need to change how your uploads are handled (not even for WordPress, Joomla or other Content Management Systems).
 
 Here's an example output for `var_dump( $_FILES );`
@@ -46,5 +46,5 @@ array(1) {
 As you can see, there are two additional keys `scan_results` and `scan_details`.
 
 - `scan_results` is a string, with two values available
-... **OK** - Scan completed and the file was considered clean
-... **PUP** - Scan completed and the file was considered a Potentially Unwanted Program
+--- **OK** - Scan completed and the file was considered clean
+--- **PUP** - Scan completed and the file was considered a Potentially Unwanted Program
