@@ -18,7 +18,9 @@ require( 'path/to/PHPScanner/scanner.php' );
 ## Example Output
 There is no need to change how your uploads are handled (not even for WordPress, Joomla or other Content Management Systems).
 
-Here's an example output for `var_dump( $_FILES );` with a clean file
+
+### Example 1 - Clean file
+Here's an example output for `var_dump( $_FILES );`
 
 ```
 array(1) {
@@ -55,8 +57,9 @@ As you can see, there are two additional keys `scan_results` and `scan_details`.
    
    It is then down to the Developer to programmatically decide if the file is indeed dangerous.
    
-   
-Here's an example output for `var_dump( $_FILES );` with a PUP file
+
+### Example 2 - RootKit file
+Here's an example output for `var_dump( $_FILES );`
 
 ```
 array(1) {
