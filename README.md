@@ -146,5 +146,5 @@ There's a couple of things to notice above
     
 #### TODO
 
-1. Email webmaster with alerts with diagnostic and client information when PUP has been found
+1. Email webmaster with diagnostic and client information when PUP has been found
 2. Auto-Update definitions list
