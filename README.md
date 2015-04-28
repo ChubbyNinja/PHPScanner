@@ -4,13 +4,13 @@ PHPScanner is a small and simple script which scans uploaded content for known s
 ## Usage
 This script is intended to be included at your php.ini level, example:
 ```
-auto_prepend_file =/etc/php5/extensions/PHPScanner/scanner.php
+auto_prepend_file =/etc/php5/extensions/PHPScanner/PHPScanner.php
 ```
 
 You can alternatively include this manually in your PHP script
 ```
 <?php
-require( 'path/to/PHPScanner/scanner.php' );
+require( 'path/to/PHPScanner/PHPScanner.php' );
 ```
 
 ## php.ini vs require
@@ -149,10 +149,60 @@ There's a couple of things to notice above
     `vun_id` is the id in our definitions.php
     `vun_string` is the matched string
     
-    
+
+## Example Triggers
+
+You can trigger a manual scan for either files or strings
+
+```
+var_dump( $PHPScanner->manual_scan_string('cat /etc/passwd') );
+var_dump( $PHPScanner->manual_scan_string('Some safe string with nothing bad on it') );
+var_dump( $PHPScanner->manual_scan_file('/var/www/uploads/file.php') );
+```
+
+Outputs
+```
+array(3) {
+  ["msg"]=>
+  string(9) "PUP Found"
+  ["found"]=>
+  array(1) {
+    [0]=>
+    array(2) {
+      ["vun_id"]=>
+      int(13)
+      ["vun_string"]=>
+      string(11) "/etc/passwd"
+    }
+  }
+  ["status"]=>
+  string(3) "PUP"
+}
+array(2) {
+  ["msg"]=>
+  string(10) "File clean"
+  ["status"]=>
+  string(2) "OK"
+}
+array(3) {
+  ["msg"]=>
+  string(9) "PUP Found"
+  ["found"]=>
+  array(1) {
+    [0]=>
+    array(2) {
+      ["vun_id"]=>
+      int(0)
+      ["vun_string"]=>
+      string(11) "-type f -name .htpasswd"
+    }
+  }
+  ["status"]=>
+  string(3) "PUP"
+}
+```
     
 #### TODO
 
 1. Email webmaster with diagnostic and client information when PUP has been found
 2. Auto-Update definitions list
-3. Trigger a manual scan of file
