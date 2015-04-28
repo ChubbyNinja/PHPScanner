@@ -11,6 +11,7 @@ Please note: You can extract PHPScanner anywhere, but I like to collate them und
 
 ## How to Install
 Via SSH/Terminal (requires root or prepend each command with `sudo`)
+
 1. `cd /etc/php5` - Move to the php5 directory
 2. `mkdir extensions` - Creates the extensions directory if it does not exist
 3. `cd extensions` - Move into the extensions directory
