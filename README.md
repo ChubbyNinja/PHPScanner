@@ -157,6 +157,16 @@ array(1) {
 }
 ```
 
+There's a couple of things to notice above
+
+1. As you can see, the `tmp_name` has been appended with `_VIRUS_FOUND` - the decision to do this instead of remove the file completely is to give you (the developer) the flexibility of deciding if you should continue. - The default action will be to fail
+2. The `error` number has changed to `8`.
+3. The `scan_results` are now `PUP`
+4. The `scan_details` now gives you a multidimensional array
+    `vun_id` is the id in our definitions.php
+    `vun_string` is the matched string
+    
+    
 
 ### Example 3 - multiple files attribute
 You can upload multiple files through one input box - PHPScanner takes this into consideration too.
@@ -282,16 +292,6 @@ array(2) {
   }
 }
 ```
-
-There's a couple of things to notice above
-
-1. As you can see, the `tmp_name` has been appended with `_VIRUS_FOUND` - the decision to do this instead of remove the file completely is to give you (the developer) the flexibility of deciding if you should continue. - The default action will be to fail
-2. The `error` number has changed to `8`.
-3. The `scan_results` are now `PUP`
-4. The `scan_details` now gives you a multidimensional array
-    `vun_id` is the id in our definitions.php
-    `vun_string` is the matched string
-    
 
 ## Example Triggers
 
