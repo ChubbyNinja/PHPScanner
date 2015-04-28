@@ -9,18 +9,18 @@
  * Time: 13:23
  */
 
-	require 'definitions/definitions.php';
+	require rtrim(dirname(__FILE__), '/') .'/definitions/definitions.php';
 
 
 	function do_scan( $arr )
 	{
-		global $known_commands;
+		global $definitions;
 
 
 		$found = [];
 		$content = file_get_contents( $arr['tmp_name'] );
 
-		foreach( $known_commands as $vun_id => $find )
+		foreach( $definitions as $vun_id => $find )
 		{
 			if( stripos( $content, $find ) !== false )
 			{
