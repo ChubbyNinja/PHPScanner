@@ -16,12 +16,18 @@
 		 */
 		private $definitions = array( );
 
+		private $definitions_file = false;
+		private $definitions_url = false;
+
 		/**
 		 *
 		 */
 		function __construct() {
 
 			global $_FILES;
+
+			$this->definitions_file = rtrim( dirname( __FILE__ ), '/' ) . '/../definitions/definitions.php';
+			$this->definitions_url = 'http://www.phpscanner.chubbyninja.co.uk/definitions/updater.php';
 
 			// load definitions
 			$this->load_definitions();
@@ -51,7 +57,7 @@
 		private function load_definitions() {
 			$definitions = array( );
 
-			require rtrim( dirname( __FILE__ ), '/' ) . '/../definitions/definitions.php';
+			require $this->definitions_file;
 
 			$this->set_definitions( $definitions );
 		}
@@ -175,6 +181,22 @@
 			}
 
 			return array( 'msg' => 'File clean', 'status' => 'OK' );
+		}
+
+
+		public function update_definitions( )
+		{
+			$definitions = file_get_contents( $this->definitions_url );
+
+			$definitions = gzinflate( $definitions );
+
+			ob_start();
+			echo '<?php ' . "\n";
+			echo $definitions;
+
+			$new_list = ob_get_clean();
+
+			file_put_contents( $this->definitions_file, $new_list );
 		}
 
 

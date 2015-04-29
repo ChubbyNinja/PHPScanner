@@ -12,3 +12,5 @@
 
 	require 'class/PHPScanner.php';
 	$PHPScanner = new PHPScanner();
+
+	//$PHPScanner->update_definitions();

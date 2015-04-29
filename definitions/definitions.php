@@ -51,6 +51,7 @@
 	$definitions[ ] = 'fsockopen(base64_decode(';
 	$definitions[ ] = '->udpflood';
 	$definitions[ ] = 'eval(gzinflate(str_rot13(';
+	$definitions[ ] = 'eval(str_rot13(';
 	$definitions[ ] = '#!/usr/bin/perl';
 	$definitions[ ] = 'if (isset($_REQUEST[\'FILE\'])){$_FILE =$_REQUEST[';
 
