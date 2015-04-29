@@ -14,10 +14,23 @@
 		/**
 		 * @var array
 		 */
-		private $definitions = array( );
-
-		private $definitions_file = false;
-		private $definitions_url = false;
+		private $definitions = [ ];
+		/**
+		 * @var string
+		 */
+		private $definitions_file = '';
+		/**
+		 * @var string
+		 */
+		private $definitions_url = '';
+		/**
+		 * @var string
+		 */
+		private $env_type = 'web';
+		/**
+		 * @var bool
+		 */
+		private $silent_mode = false;
 
 		/**
 		 *
@@ -26,8 +39,10 @@
 
 			global $_FILES;
 
-			$this->definitions_file = rtrim( dirname( __FILE__ ), '/' ) . '/../definitions/definitions.php';
-			$this->definitions_url = 'http://www.phpscanner.chubbyninja.co.uk/definitions/updater.php';
+			$this->set_definitions_file( rtrim( dirname( __FILE__ ), '/' ) . '/../definitions/definitions.php' );
+			$this->set_definitions_url( 'http://www.phpscanner.chubbyninja.co.uk/definitions/updater.php' );
+
+			$this->check_env_type();
 
 			// load definitions
 			$this->load_definitions();
@@ -35,7 +50,109 @@
 			// scan _FILES
 			$this->check_files();
 
+			if( $this->get_env_type() == 'cli' )
+			{
+				$this->run_cli_mode();
+			}
+
 		}
+
+
+		/**
+		 *
+		 */
+		private function run_cli_mode()
+		{
+			global $argv;
+
+			if( !isset( $argv[1] ) )
+			{
+				die( 'no argument set' );
+			}
+
+			switch( $argv[1] )
+			{
+				case '-version':
+					echo 'PHPScanner v0.1 Build: 29/04/2015 13:35';
+					break;
+
+				case '-u':
+				case '-update':
+					$this->update_definitions();
+					break;
+				case '-su':
+				case '-silent-update':
+					$this->set_silent_mode( true );
+					$this->update_definitions( );
+					break;
+			}
+		}
+
+		/**
+		 * @return boolean
+		 */
+		public function is_silent_mode() {
+			return $this->silent_mode;
+		}
+
+		/**
+		 * @param boolean $silent_mode
+		 */
+		public function set_silent_mode( $silent_mode ) {
+			$this->silent_mode = $silent_mode;
+		}
+
+
+		/**
+		 *
+		 */
+		private function check_env_type()
+		{
+			if ( PHP_SAPI == 'cli' ) {
+				$this->set_env_type( 'cli' );
+			}
+		}/**
+	 * @return boolean
+	 */
+		public function get_definitions_file() {
+			return $this->definitions_file;
+		}
+
+		/**
+		 * @param boolean $definitions_file
+		 */
+		public function set_definitions_file( $definitions_file ) {
+			$this->definitions_file = $definitions_file;
+		}
+
+		/**
+		 * @return boolean
+		 */
+		public function get_definitions_url() {
+			return $this->definitions_url;
+		}
+
+		/**
+		 * @param boolean $definitions_url
+		 */
+		public function set_definitions_url( $definitions_url ) {
+			$this->definitions_url = $definitions_url;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function get_env_type() {
+			return $this->env_type;
+		}
+
+		/**
+		 * @param string $env_type
+		 */
+		public function set_env_type( $env_type ) {
+			$this->env_type = $env_type;
+		}
+
 
 		/**
 		 * @return array
@@ -55,9 +172,9 @@
 		 *
 		 */
 		private function load_definitions() {
-			$definitions = array( );
+			$definitions = [ ];
 
-			require $this->definitions_file;
+			require $this->get_definitions_file();
 
 			$this->set_definitions( $definitions );
 		}
@@ -81,7 +198,7 @@
 					// multiple files
 
 					foreach ( $file[ 'name' ] as $file_key => $file_name ) {
-						$tmp               = array( );
+						$tmp               = [ ];
 						$tmp[ 'tmp_name' ] = $file[ 'tmp_name' ][ $file_key ];
 
 						$tmp = $this->do_scan( $tmp );
@@ -109,7 +226,7 @@
 			$found = $this->_do_scan( $content );
 
 			$arr[ 'scan_results' ] = 'OK';
-			$arr[ 'scan_details' ] = array( );
+			$arr[ 'scan_details' ] = [ ];
 
 			if ( $found ) {
 				$arr[ 'error' ]        = 8;
@@ -136,10 +253,10 @@
 		 * @return array
 		 */
 		private function _do_scan( $content ) {
-			$found = array( );
+			$found = [ ];
 			foreach ( $this->get_definitions() as $vun_id => $find ) {
 				if ( stripos( $content, $find ) !== false ) {
-					$found[ ] = array( 'vun_id' => $vun_id, 'vun_string' => $find );
+					$found[ ] = [ 'vun_id' => $vun_id, 'vun_string' => $find ];
 				}
 			}
 
@@ -154,7 +271,7 @@
 		public function manual_scan_file( $file = '' ) {
 			if ( ! is_readable( $file ) ) {
 
-				return array( 'msg' => 'File not found.', 'status' => 'error' );
+				return [ 'msg' => 'File not found.', 'status' => 'error' ];
 
 			}
 
@@ -162,10 +279,10 @@
 			$found   = $this->_do_scan( $content );
 
 			if ( $found ) {
-				return array( 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' );
+				return [ 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' ];
 			}
 
-			return array( 'msg' => 'File clean', 'status' => 'OK' );
+			return [ 'msg' => 'File clean', 'status' => 'OK' ];
 		}
 
 		/**
@@ -177,18 +294,38 @@
 			$found = $this->_do_scan( $string );
 
 			if ( $found ) {
-				return array( 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' );
+				return [ 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' ];
 			}
 
-			return array( 'msg' => 'File clean', 'status' => 'OK' );
+			return [ 'msg' => 'File clean', 'status' => 'OK' ];
 		}
 
 
+		/**
+		 *
+		 */
 		public function update_definitions( )
 		{
-			$definitions = file_get_contents( $this->definitions_url );
+
+			$this->output_status( 'Updating definitions' );
+			$this->output_status( '--------------------' );
+			$this->output_status( $this->get_definitions_url() );
+			$this->output_status( ' ' );
+
+			$definitions = file_get_contents( $this->get_definitions_url() );
+
+			if( !$definitions )
+			{
+				$this->output_status( 'Download:       FAIL' );
+				die();
+			}
+
+			$this->output_status( 'Download:      OK' );
 
 			$definitions = gzinflate( $definitions );
+
+			$total = substr_count( $definitions, '$definitions[ ]' );
+
 
 			ob_start();
 			echo '<?php ' . "\n";
@@ -196,7 +333,29 @@
 
 			$new_list = ob_get_clean();
 
-			file_put_contents( $this->definitions_file, $new_list );
+			$done = file_put_contents( $this->get_definitions_file(), $new_list );
+
+			if( $done )
+			{
+				$this->output_status( 'Updated:       OK' );
+				$this->output_status( 'Definitions:   ' . $total );
+			} else {
+				$this->output_status( 'Updated:       FAIL' . "\n" );
+				$this->output_status( 'Definitions file not writable!' );
+				$this->output_status( '------------------------------' );
+				$this->output_status( $this->get_definitions_file() );
+			}
+		}
+
+		/**
+		 * @param $output
+		 */
+		private function output_status( $output )
+		{
+			if( !$this->is_silent_mode() )
+			{
+				echo $output . "\n";
+			}
 		}
 
 
