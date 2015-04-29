@@ -10,7 +10,7 @@
 	 */
 
 	// PHP definitions
-	$definitions    = [ ];
+	$definitions    = array( );
 	$definitions[ ] = '-type f -name .htpasswd';
 	$definitions[ ] = '-type f -name ".htpasswd"';
 	$definitions[ ] = 'netstat';
