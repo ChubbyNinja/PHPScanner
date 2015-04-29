@@ -14,7 +14,7 @@
 		/**
 		 * @var array
 		 */
-		private $definitions = [ ];
+		private $definitions = array( );
 		/**
 		 * @var string
 		 */
@@ -172,7 +172,7 @@
 		 *
 		 */
 		private function load_definitions() {
-			$definitions = [ ];
+			$definitions = array( );
 
 			require $this->get_definitions_file();
 
@@ -198,7 +198,7 @@
 					// multiple files
 
 					foreach ( $file[ 'name' ] as $file_key => $file_name ) {
-						$tmp               = [ ];
+						$tmp               = array( );
 						$tmp[ 'tmp_name' ] = $file[ 'tmp_name' ][ $file_key ];
 
 						$tmp = $this->do_scan( $tmp );
@@ -226,7 +226,7 @@
 			$found = $this->_do_scan( $content );
 
 			$arr[ 'scan_results' ] = 'OK';
-			$arr[ 'scan_details' ] = [ ];
+			$arr[ 'scan_details' ] = array( );
 
 			if ( $found ) {
 				$arr[ 'error' ]        = 8;
@@ -253,10 +253,10 @@
 		 * @return array
 		 */
 		private function _do_scan( $content ) {
-			$found = [ ];
+			$found = array( );
 			foreach ( $this->get_definitions() as $vun_id => $find ) {
 				if ( stripos( $content, $find ) !== false ) {
-					$found[ ] = [ 'vun_id' => $vun_id, 'vun_string' => $find ];
+					$found[ ] = array( 'vun_id' => $vun_id, 'vun_string' => $find );
 				}
 			}
 
@@ -271,7 +271,7 @@
 		public function manual_scan_file( $file = '' ) {
 			if ( ! is_readable( $file ) ) {
 
-				return [ 'msg' => 'File not found.', 'status' => 'error' ];
+				return array( 'msg' => 'File not found.', 'status' => 'error' );
 
 			}
 
@@ -279,10 +279,10 @@
 			$found   = $this->_do_scan( $content );
 
 			if ( $found ) {
-				return [ 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' ];
+				return array( 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' );
 			}
 
-			return [ 'msg' => 'File clean', 'status' => 'OK' ];
+			return array( 'msg' => 'File clean', 'status' => 'OK' );
 		}
 
 		/**
@@ -294,10 +294,10 @@
 			$found = $this->_do_scan( $string );
 
 			if ( $found ) {
-				return [ 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' ];
+				return array( 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' );
 			}
 
-			return [ 'msg' => 'File clean', 'status' => 'OK' ];
+			return array( 'msg' => 'File clean', 'status' => 'OK' );
 		}
 
 
