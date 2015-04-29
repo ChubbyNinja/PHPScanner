@@ -1,14 +1,6 @@
 # PHPScanner
 PHPScanner is a small and simple script which scans uploaded content for known scripts like c99 before your PHP script handles the request
 
-## Usage
-This script is intended to be included at your php.ini level, example:
-```
-auto_prepend_file =/etc/php5/extensions/PHPScanner/PHPScanner.php
-```
-Please note: You can extract PHPScanner anywhere, but I like to collate them under `/etc/php5/extensions`
-
-
 ## How to Install
 Via SSH/Terminal (requires root or prepend each command with `sudo`)
 
@@ -36,7 +28,6 @@ There are multiple benefits to including this script at php.ini level.
 1. You don't always have control over the upload scripts on your website, this is often the case with Content Management Systems that support 3rd party plugins, like Wordpress, Joomla, Drupal. PHPScanner will run before any other scripts get access to the files being uploaded. This ensures PHPScanner can take action **before** the malicious code is stored or executed.
 2. You don't have to remember to include PHPScanner when you create multiple websites (VirtualHosts)
 3. Probably more...
-
 
 
 ## Example Output
