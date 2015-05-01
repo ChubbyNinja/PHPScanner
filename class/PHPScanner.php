@@ -50,8 +50,7 @@
 			// scan _FILES
 			$this->check_files();
 
-			if( $this->get_env_type() == 'cli' )
-			{
+			if( $this->get_env_type() == 'cli' ) {
 				$this->run_cli_mode();
 			}
 
@@ -61,8 +60,7 @@
 		/**
 		 *
 		 */
-		private function run_cli_mode()
-		{
+		private function run_cli_mode()	{
 			global $argv;
 
 			if( !isset( $argv[1] ) )
@@ -106,14 +104,15 @@
 		/**
 		 *
 		 */
-		private function check_env_type()
-		{
+		private function check_env_type() {
 			if ( PHP_SAPI == 'cli' ) {
 				$this->set_env_type( 'cli' );
 			}
-		}/**
-	 * @return boolean
-	 */
+		}
+
+        /**
+         * @return boolean
+         */
 		public function get_definitions_file() {
 			return $this->definitions_file;
 		}
@@ -304,15 +303,15 @@
 		/**
 		 *
 		 */
-		public function update_definitions( )
-		{
+		public function update_definitions( ) {
 
 			$this->output_status( 'Updating definitions' );
 			$this->output_status( '--------------------' );
 			$this->output_status( $this->get_definitions_url() );
 			$this->output_status( ' ' );
 
-			$definitions = file_get_contents( $this->get_definitions_url() );
+            set_time_limit(0);
+            $definitions = file_get_contents( $this->get_definitions_url() );
 
 			if( !$definitions )
 			{
@@ -350,8 +349,7 @@
 		/**
 		 * @param $output
 		 */
-		private function output_status( $output )
-		{
+		private function output_status( $output ) {
 			if( !$this->is_silent_mode() )
 			{
 				echo $output . "\n";
