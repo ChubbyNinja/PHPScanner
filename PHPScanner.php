@@ -9,6 +9,7 @@
 	 * Time: 13:23
 	 */
 
+	define( 'PHPSC_ROOT', rtrim( dirname( __FILE__ ), '/' ) );
 
-	require 'class/PHPScanner.php';
+	require PHPSC_ROOT . '/class/PHPScanner.php';
 	$PHPScanner = new PHPScanner();
