@@ -2,33 +2,7 @@
 PHPScanner is a small and simple script which scans uploaded content for known scripts like c99 before your PHP script handles the request
 
 ## How to Install
-Via SSH/Terminal (requires root or prepend each command with `sudo`)
-
-1. `cd /etc/php5` - Move to the php5 directory
-2. `mkdir extensions` - Creates the extensions directory if it does not exist
-3. `cd extensions` - Move into the extensions directory
-4. `wget -O PHPScanner.zip https://github.com/ChubbyNinja/PHPScanner/archive/master.zip` - Download the PHPScanner
-5. `unzip PHPScanner.zip` - Unzip the PHPScanner (You may need to `apt-get install unzip`)
-6. `mv PHPScanner-master PHPScanner` - Rename the extracted folder
-7. `rm PHPScanner.zip` - Remove the archive
-8. `pico /etc/php5/apache2/php.ini` - Open up the php.ini file
-9. Find `auto_prepend_file` under Data Handling and replace with `auto_prepend_file =/etc/php5/extensions/PHPScanner/PHPScanner.php`
-10. `service apache2 restart` - restart apache2 to load PHPScanner.
-
-
-If you did not want to load PHPScanner through php.ini, you can simply download the PHPScanner and do the following:
-```
-<?php
-require( 'path/to/PHPScanner/PHPScanner.php' );
-```
-
-## php.ini vs require
-There are multiple benefits to including this script at php.ini level.
-
-1. You don't always have control over the upload scripts on your website, this is often the case with Content Management Systems that support 3rd party plugins, like Wordpress, Joomla, Drupal. PHPScanner will run before any other scripts get access to the files being uploaded. This ensures PHPScanner can take action **before** the malicious code is stored or executed.
-2. You don't have to remember to include PHPScanner when you create multiple websites (VirtualHosts)
-3. Probably more...
-
+Visit our Wiki [Installing PHPScanner](https://github.com/ChubbyNinja/PHPScanner/wiki/Installing-PHPScanner)
 
 ## Example Output
 There is no need to change how your uploads are handled (not even for WordPress, Joomla or other Content Management Systems).
