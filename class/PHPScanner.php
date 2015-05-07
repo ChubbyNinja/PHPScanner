@@ -33,7 +33,7 @@
 		private $silent_mode = false;
 
 
-		private $phpsc_version = '1.0';
+		private $phpsc_version = '1.1';
 
 
 		private $notify = array( );
@@ -400,7 +400,7 @@
 				if( $this->get_action( 'iptables' ) )
 				{
 					$str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
-					print($str);//replace with exec...
+					//print($str); //replace with exec...
 				}
 
 			} else {

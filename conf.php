@@ -51,14 +51,14 @@ $action['level'] = 1;
  *  Boolean (true/false)
  *  Default: false
  */
-$action['iptables'] = false;
+$action['iptables'] = false; /* working in 1.2 release */
 
 
 /** @var $action['iptables_string']
  *  IPTABLES input string, %s is a placeholder for clients IP address, do not remove
  *  WARNING: ALTER AT OWN RISK
  */
-$action['iptables_string'] = 'iptables -I INPUT -s %s -j DROP';
+$action['iptables_string'] = 'iptables -I INPUT -s %s -j DROP'; /* working in 1.2 release */
 
 
 /** @var $action['threshold']
