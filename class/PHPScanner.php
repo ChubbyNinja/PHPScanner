@@ -49,7 +49,7 @@
 			global $_FILES;
 
 			$this->set_definitions_file( PHPSC_ROOT . '/definitions/definitions.php' );
-			$this->set_definitions_url( 'http://www.phpscanner.chubbyninja.co.uk/definitions/updater.php' );
+			$this->set_definitions_url( 'http://www.phpscanner.chubbyninja.co.uk/definitions/latest.php' );
 
 			$this->load_config();
 
