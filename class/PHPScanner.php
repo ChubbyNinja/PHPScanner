@@ -425,8 +425,8 @@
 
                     if( !in_array( $this->get_real_ip(), $this->get_action( 'ip_whitelist' ) ) )
                     {
-                        $str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
-                        print($str); //replace with exec...
+                        /*$str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
+                        print($str);*/ //replace with exec...
                     }
 
 
