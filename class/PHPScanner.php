@@ -33,7 +33,7 @@
 		private $silent_mode = false;
 
 
-		private $phpsc_version = '1.1';
+		private $phpsc_version = '1.2';
 
 
 		private $notify = array( );
@@ -167,9 +167,7 @@
 					break;
 
 				case '-help':
-
 					$this->output_commands();
-
 					break;
 			}
 		}
@@ -216,7 +214,7 @@
 		 */
 		private function check_env_type() {
 			if ( PHP_SAPI == 'cli' ) {
-				$this->set_env_type( 'cli' );
+				//$this->set_env_type( 'cli' );
 			}
 		}
 
@@ -322,6 +320,32 @@
 			$this->trigger_notify( );
 		}
 
+
+        private function fgc_chunks( $file, $size, $found = [] )
+        {
+            $handle = fopen( $file, 'r' );
+
+            $i = 0;
+
+            while(!feof( $handle ))
+            {
+                $f = $this->_do_scan( fread($handle, $size) );
+
+                if( $f ) {
+                    foreach( $f as $ff )
+                    {
+                        $found[] = $ff;
+                    }
+                }
+
+                $i++;
+            }
+
+            fclose( $handle );
+
+            return $found;
+        }
+
 		/**
 		 * @param $arr
 		 *
@@ -332,10 +356,9 @@
 				return $arr;
 			}
 
-			$content = file_get_contents( $arr[ 'tmp_name' ] );
+			//$content = file_get_contents( $arr[ 'tmp_name' ] );
 
-			$found = $this->_do_scan( $content );
-
+            $found = $this->fgc_chunks( $arr['tmp_name'], 50000 );
 
 			if ( count($found) >= $this->get_action('threshold') ) {
 
@@ -397,11 +420,35 @@
 						break;
 				}
 
-				if( $this->get_action( 'iptables' ) )
-				{
-					$str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
-					//print($str); //replace with exec...
-				}
+                if( $this->get_action( 'iptables' ) )
+                {
+
+                    if( !in_array( $this->get_real_ip(), $this->get_action( 'ip_whitelist' ) ) )
+                    {
+                        $str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
+                        print($str); //replace with exec...
+                    }
+
+
+                }
+
+                if( $this->get_action( 'log_enabled' ) )
+                {
+
+                    if( !in_array( $this->get_real_ip(), $this->get_action( 'ip_whitelist' ) ) )
+                    {
+                        $str = sprintf( '%s: %s - %s' . "\n", date('Y-m-d H:i:s'),$this->get_real_ip(), $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] );
+                        $handle = fopen( $this->get_action('log_location'), 'a' );
+
+                        if( $handle )
+                        {
+                            fwrite( $handle, $str );
+                            fclose($handle);
+                        }
+                    }
+
+
+                }
 
 			} else {
 				$arr[ 'scan_results' ] = 'OK';
@@ -434,6 +481,8 @@
 					return 'File Deleted';
 					break;
 			}
+
+            return false;
 		}
 
 		private function trigger_notify( ) {
@@ -462,7 +511,7 @@
 						<title><?=$this->get_notify('subject')?></title>
 					</head>
 					<body>
-					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.
+					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>..<br><br>
 
 					Action Taken: <?=$this->action_lvl_to_text()?>
 					</body>
@@ -482,18 +531,35 @@
 						<title><?=$this->get_notify('subject')?></title>
 					</head>
 					<body>
-					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.
+					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.<br><br>
 
-					Action Taken: <?=$this->action_lvl_to_text()?>
+					Action Taken: <?=$this->action_lvl_to_text()?>.<br><br>
 
-					Details:
+					Details<br>===========<br>
 					<?php
-					print_r( $this->get_notify_list() );
+                    foreach( $this->get_notify_list() as $file )
+                    {
+                        foreach( $file as $key=>$val ) {
+
+
+                            if ($key == 'scan_results') {
+                                echo '<br>Scan Results' . '<br>===========<br>';
+                                foreach ($val as $vunkey => $vun) {
+                                    echo 'VUN_ID: ' . $vun['vun_id'] . ': ' . htmlspecialchars($vun['vun_string'])  . '<br>';
+                                }
+                            } else {
+                                echo $key . ': ' . $val . '<br>';
+                            }
+                        }
+                    }
 					?>
 
-					Server:
+                    <br>Server<br>===========<br>
 					<?php
-					print_r($_SERVER);
+                    foreach( $_SERVER as $key=>$val )
+                    {
+                        echo $key . ': ' . $val . '<br>';
+                    }
 					?>
 
 					</body>
@@ -503,11 +569,16 @@
 					break;
 			}
 
+            if( !$html )
+            {
+                return;
+            }
+
 			$headers = 'From: ' . $this->get_notify('from_email') . "\r\n" .
 				'Reply-To: ' . $this->get_notify('from_email') . "\r\n" .
 				'X-Mailer: PHP/' . phpversion();
 
-			$sent = mail( $this->get_notify('email'), $this->get_notify('subject'), $html, $headers );
+			mail( $this->get_notify('email'), $this->get_notify('subject'), $html, $headers );
 
 		}
 
@@ -539,8 +610,7 @@
 
 			}
 
-			$content = file_get_contents( $file );
-			$found   = $this->_do_scan( $content );
+            $found = $this->fgc_chunks( $file, 4096 );
 
 			if ( $found ) {
 				return array( 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' );

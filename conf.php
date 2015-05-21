@@ -61,6 +61,29 @@ $action['iptables'] = false; /* working in 1.2 release */
 $action['iptables_string'] = 'iptables -I INPUT -s %s -j DROP'; /* working in 1.2 release */
 
 
+/** @var $action['ip_whitelist']
+ *  IPTABLES will not add any of the follow IP addresses - this is a failsafe against IP spoofing.
+ *  WARNING: ALTER AT OWN RISK
+ */
+$action['ip_whitelist'] = ['127.0.0.1'];
+
+
+/** @var $action['log_enabled']
+ *  Log IP addresses that upload PUP
+ *  Boolean (true/false)
+ *  Default: true
+ */
+$action['log_enabled'] = true;
+
+
+/** @var $action['log_location']
+ *  Location of log
+ *  string
+ *  Default: /var/log/phpsc.log
+ */
+$action['log_location'] = PHPSC_ROOT . '/phpsc.log';
+
+
 /** @var $action['threshold']
  *  Minimum string matches before considered a PUP
  *  integer
