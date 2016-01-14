@@ -46,7 +46,7 @@ $notify['subject'] = 'PUP Found on ' . $_SERVER['SERVER_NAME'];
 $action['level'] = 1;
 
 
-/** @var $action['iptables']
+/** @boolean $action['iptables']
  *  Block client IP address on PUP detection
  *  Boolean (true/false)
  *  Default: false
@@ -67,3 +67,17 @@ $action['iptables_string'] = 'iptables -I INPUT -s %s -j DROP';
  *  Default: 3
 */
 $action['threshold'] = 3;
+
+/** @var $action['max_file_size']
+ *  Exclude files over this size
+ *  integer
+ *  Default: 2097152
+ */
+
+$action['max_file_size'] = 2097152;
+
+/** @boolean $action['use_clamav']
+ *  Use clamav for scanning (recommended)
+ *  http://www.clamav.net/downloads
+ */
+$action['use_clamav'] = true;

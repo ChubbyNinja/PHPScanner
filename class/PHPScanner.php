@@ -331,6 +331,8 @@
 		/**
 		 * @param $arr
 		 *
+		 * @param $key
+		 * @param bool $multi
 		 * @return mixed
 		 */
 		private function do_scan( $arr, $key, $multi=false ) {
@@ -338,13 +340,23 @@
 				return $arr;
 			}
 
-			$content = file_get_contents( $arr[ 'tmp_name' ] );
-
-			if( !$content ) {
+			// size of upload exceeds our specified max_file_size variable in config
+			if( $arr['size'] > $this->get_action('max_file_size') ) {
 				return $arr;
 			}
 
-			$found = $this->_do_scan( $content );
+			if( $this->get_action('use_clamav') ) {
+				$found = $this->_do_clamav_scan( $arr['tmp_name'] );
+			} else {
+
+				$content = @file_get_contents($arr['tmp_name']);
+				if (!$content) {
+					return $arr;
+				}
+
+				$found = $this->_do_scan($content);
+
+			}
 
 
 			if ( count($found) >= $this->get_action('threshold') ) {
@@ -533,6 +545,15 @@
 			}
 
 			return $found;
+		}
+
+
+		private function _do_clamav_scan( $location ) {
+
+			$result = shell_exec( 'clamdscan --no-summary ' . $location );
+
+			print_r($result);
+
 		}
 
 		/**
