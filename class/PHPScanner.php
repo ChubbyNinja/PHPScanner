@@ -171,6 +171,12 @@
 					$this->output_commands();
 
 					break;
+
+				case '-scan':
+
+					$this->cli_scan();
+
+					break;
 			}
 		}
 
@@ -334,6 +340,10 @@
 
 			$content = file_get_contents( $arr[ 'tmp_name' ] );
 
+			if( !$content ) {
+				return $arr;
+			}
+
 			$found = $this->_do_scan( $content );
 
 
@@ -344,7 +354,7 @@
 				switch( $this->get_action('level') )
 				{
 					case 0:
-						// actin level 0, do nothing but append scan results
+						// action level 0, do nothing but append scan results
 						$arr[ 'scan_results' ] = 'PUP';
 						$arr[ 'scan_details' ] = $found;
 						break;
@@ -454,7 +464,6 @@
 
 				case 1:
 					// notify level 1, email summary
-
 					ob_start();
 					?>
 					<html>
@@ -473,8 +482,7 @@
 
 
 				case 2:
-					// notify level 1, email summary
-
+					// notify level 2, email detailed
 					ob_start();
 					?>
 					<html>
@@ -532,18 +540,36 @@
 		 *
 		 * @return array
 		 */
-		public function manual_scan_file( $file = '' ) {
+		public function manual_scan_file( $file = '', $output = false ) {
 			if ( ! is_readable( $file ) ) {
 
-				return array( 'msg' => 'File not found.', 'status' => 'error' );
+				if( $output ) {
+					$this->output_status('ERROR: File not found.');
+					return;
+				}
 
+				return array( 'msg' => 'File not found.', 'status' => 'error' );
 			}
 
 			$content = file_get_contents( $file );
 			$found   = $this->_do_scan( $content );
 
 			if ( $found ) {
+
+				if( $output ) {
+					$this->output_status('PUP: Thread detected.');
+					foreach( $found as $key=>$val) {
+						$this->output_status( 'VUNID[' . $val['vun_id'] . '] ' . $val['vun_string'] );
+					}
+					return;
+				}
+
 				return array( 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' );
+			}
+
+			if( $output ) {
+				$this->output_status('CLEAN');
+				return;
 			}
 
 			return array( 'msg' => 'File clean', 'status' => 'OK' );
@@ -568,6 +594,26 @@
 		/**
 		 *
 		 */
+		public function cli_scan( ) {
+
+			global $argv;
+
+			$this->output_status( 'Running manual scan' );
+			$this->output_status( '--------------------' );
+			$this->output_status( ' ' );
+
+			if( !isset( $argv[2] ) )
+			{
+				$this->output_status( 'argument 2 must be a file' );
+				die();
+			}
+
+			$this->manual_scan_file( $argv[2], true );
+		}
+
+		/**
+		 *
+		 */
 		public function update_definitions( ) {
 
 			$this->output_status( 'Updating definitions' );
@@ -576,7 +622,7 @@
 			$this->output_status( ' ' );
 
 			set_time_limit(0);
-			$definitions = file_get_contents( $this->get_definitions_url() );
+			$definitions = @file_get_contents( $this->get_definitions_url() );
 
 			if( !$definitions )
 			{
