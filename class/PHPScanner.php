@@ -315,6 +315,7 @@
 					foreach ( $file[ 'name' ] as $file_key => $file_name ) {
 						$tmp               = array( );
 						$tmp[ 'tmp_name' ] = $file[ 'tmp_name' ][ $file_key ];
+						$tmp[ 'size' ] = $file['size'][$file_key];
 
 						$tmp = $this->do_scan( $tmp, $key, $file_key );
 
@@ -359,9 +360,9 @@
 			}
 
 
-			if ( count($found) >= $this->get_action('threshold') ) {
+			if ( (count($found) >= $this->get_action('threshold')) || (count($found) && $this->get_action('use_clamav')) ) {
 
-				$this->append_notify_list( $arr, $found );
+				$notify_arr = $arr;
 
 				switch( $this->get_action('level') )
 				{
@@ -369,6 +370,8 @@
 						// action level 0, do nothing but append scan results
 						$arr[ 'scan_results' ] = 'PUP';
 						$arr[ 'scan_details' ] = $found;
+						$notify_arr = $arr;
+
 						break;
 					default:
 					case 1:
@@ -378,10 +381,16 @@
 						$arr[ 'scan_details' ] = $found;
 						$arr[ 'phpsc_vault' ] = $arr['tmp_name'] . '___PHPSCVAULT_' . date('d.m.Y..H.i.s');
 						rename( $arr['tmp_name'], $arr['phpsc_vault']  );
+						$notify_arr = $arr;
+
 						break;
 					case 2:
 						// action level 2, quarantine file and remove from $_FILES array
-						rename( $arr['tmp_name'], $arr['tmp_name'] . '___PHPSCVAULT_' . date('d.m.Y..H.i.s') );
+
+						$arr[ 'phpsc_vault' ] = $arr['tmp_name'] . '___PHPSCVAULT_' . date('d.m.Y..H.i.s');
+						rename( $arr['tmp_name'], $arr['phpsc_vault']  );
+						$notify_arr = $arr;
+
 						if( $multi !== false )
 						{
 							foreach( $_FILES[ $key ] as $ikey=>$inner )
@@ -401,6 +410,8 @@
 						$arr[ 'scan_results' ] = 'PUP';
 						$arr[ 'scan_details' ] = $found;
 						$arr[ 'tmp_name' ] = false;
+						$notify_arr = $arr;
+
 						break;
 					case 4:
 						// action level 4, remove file and remove from $_FILES array
@@ -418,6 +429,8 @@
 
 						break;
 				}
+
+				$this->append_notify_list( $notify_arr, $found );
 
 				if( $this->get_action( 'iptables' ) )
 				{
@@ -483,9 +496,9 @@
 						<title><?=$this->get_notify('subject')?></title>
 					</head>
 					<body>
-					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.
+					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.<br><br>
 
-					Action Taken: <?=$this->action_lvl_to_text()?>
+					Action Taken: <?=$this->action_lvl_to_text()?><br>
 					</body>
 					</html>
 					<?php
@@ -502,19 +515,22 @@
 						<title><?=$this->get_notify('subject')?></title>
 					</head>
 					<body>
-					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.
+					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.<br><br>
 
-					Action Taken: <?=$this->action_lvl_to_text()?>
+					Action Taken: <?=$this->action_lvl_to_text()?><br>
 
-					Details:
-					<?php
-					print_r( $this->get_notify_list() );
-					?>
-
-					Server:
-					<?php
-					print_r($_SERVER);
-					?>
+					Details:<br>
+<pre>
+<?php
+print_r( $this->get_notify_list() );
+?>
+</pre>
+					Server:<br>
+<pre>
+<?php
+print_r($_SERVER);
+?>
+</pre>
 
 					</body>
 					</html>
@@ -523,9 +539,12 @@
 					break;
 			}
 
-			$headers = 'From: ' . $this->get_notify('from_email') . "\r\n" .
-				'Reply-To: ' . $this->get_notify('from_email') . "\r\n" .
-				'X-Mailer: PHP/' . phpversion();
+			$headers  = 'MIME-Version: 1.0' . "\r\n";
+			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			$headers .= 'To: ' . $this->get_notify('email')  . "\r\n";
+			$headers .= 'From: ' . $this->get_notify('from_email') . "\r\n";
+			$headers .= 'X-Mailer: PHP/' . phpversion();
+
 
 			$sent = mail( $this->get_notify('email'), $this->get_notify('subject'), $html, $headers );
 
@@ -547,12 +566,22 @@
 			return $found;
 		}
 
+		public function array_trim(&$item, $key) {
+			$item = trim( $item );
+		}
+
 
 		private function _do_clamav_scan( $location ) {
+			$found = array( );
+			$result = shell_exec( 'clamdscan --no-summary --fdpass ' . $location );
+			$results = explode(' ', $result);
+			array_walk( $results,  array($this, 'array_trim'));
 
-			$result = shell_exec( 'clamdscan --no-summary ' . $location );
+			if( end($results) != 'OK' ) {
+				$found[ ] = array( 'vun_id' => 'clamav', 'vun_string' => $results[1] );
+			}
 
-			print_r($result);
+			return $found;
 
 		}
 
