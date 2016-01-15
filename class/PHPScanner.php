@@ -33,7 +33,7 @@
 		private $silent_mode = false;
 
 
-		private $phpsc_version = '1.2';
+		private $phpsc_version = '1.0';
 
 
 		private $notify = array( );
@@ -49,7 +49,7 @@
 			global $_FILES;
 
 			$this->set_definitions_file( PHPSC_ROOT . '/definitions/definitions.php' );
-			$this->set_definitions_url( 'http://www.phpscanner.chubbyninja.co.uk/definitions/latest.php' );
+			$this->set_definitions_url( 'http://www.phpscanner.chubbyninja.co.uk/definitions/updater.php' );
 
 			$this->load_config();
 
@@ -167,7 +167,15 @@
 					break;
 
 				case '-help':
+
 					$this->output_commands();
+
+					break;
+
+				case '-scan':
+
+					$this->cli_scan();
+
 					break;
 			}
 		}
@@ -214,7 +222,7 @@
 		 */
 		private function check_env_type() {
 			if ( PHP_SAPI == 'cli' ) {
-				//$this->set_env_type( 'cli' );
+				$this->set_env_type( 'cli' );
 			}
 		}
 
@@ -307,6 +315,7 @@
 					foreach ( $file[ 'name' ] as $file_key => $file_name ) {
 						$tmp               = array( );
 						$tmp[ 'tmp_name' ] = $file[ 'tmp_name' ][ $file_key ];
+						$tmp[ 'size' ] = $file['size'][$file_key];
 
 						$tmp = $this->do_scan( $tmp, $key, $file_key );
 
@@ -320,35 +329,11 @@
 			$this->trigger_notify( );
 		}
 
-
-        private function fgc_chunks( $file, $size, $found = [] )
-        {
-            $handle = fopen( $file, 'r' );
-
-            $i = 0;
-
-            while(!feof( $handle ))
-            {
-                $f = $this->_do_scan( fread($handle, $size) );
-
-                if( $f ) {
-                    foreach( $f as $ff )
-                    {
-                        $found[] = $ff;
-                    }
-                }
-
-                $i++;
-            }
-
-            fclose( $handle );
-
-            return $found;
-        }
-
 		/**
 		 * @param $arr
 		 *
+		 * @param $key
+		 * @param bool $multi
 		 * @return mixed
 		 */
 		private function do_scan( $arr, $key, $multi=false ) {
@@ -356,20 +341,37 @@
 				return $arr;
 			}
 
-			//$content = file_get_contents( $arr[ 'tmp_name' ] );
+			// size of upload exceeds our specified max_file_size variable in config
+			if( $arr['size'] > $this->get_action('max_file_size') ) {
+				return $arr;
+			}
 
-            $found = $this->fgc_chunks( $arr['tmp_name'], 50000 );
+			if( $this->get_action('use_clamav') ) {
+				$found = $this->_do_clamav_scan( $arr['tmp_name'] );
+			} else {
 
-			if ( count($found) >= $this->get_action('threshold') ) {
+				$content = @file_get_contents($arr['tmp_name']);
+				if (!$content) {
+					return $arr;
+				}
 
-				$this->append_notify_list( $arr, $found );
+				$found = $this->_do_scan($content);
+
+			}
+
+
+			if ( (count($found) >= $this->get_action('threshold')) || (count($found) && $this->get_action('use_clamav')) ) {
+
+				$notify_arr = $arr;
 
 				switch( $this->get_action('level') )
 				{
 					case 0:
-						// actin level 0, do nothing but append scan results
+						// action level 0, do nothing but append scan results
 						$arr[ 'scan_results' ] = 'PUP';
 						$arr[ 'scan_details' ] = $found;
+						$notify_arr = $arr;
+
 						break;
 					default:
 					case 1:
@@ -379,10 +381,16 @@
 						$arr[ 'scan_details' ] = $found;
 						$arr[ 'phpsc_vault' ] = $arr['tmp_name'] . '___PHPSCVAULT_' . date('d.m.Y..H.i.s');
 						rename( $arr['tmp_name'], $arr['phpsc_vault']  );
+						$notify_arr = $arr;
+
 						break;
 					case 2:
 						// action level 2, quarantine file and remove from $_FILES array
-						rename( $arr['tmp_name'], $arr['tmp_name'] . '___PHPSCVAULT_' . date('d.m.Y..H.i.s') );
+
+						$arr[ 'phpsc_vault' ] = $arr['tmp_name'] . '___PHPSCVAULT_' . date('d.m.Y..H.i.s');
+						rename( $arr['tmp_name'], $arr['phpsc_vault']  );
+						$notify_arr = $arr;
+
 						if( $multi !== false )
 						{
 							foreach( $_FILES[ $key ] as $ikey=>$inner )
@@ -402,6 +410,8 @@
 						$arr[ 'scan_results' ] = 'PUP';
 						$arr[ 'scan_details' ] = $found;
 						$arr[ 'tmp_name' ] = false;
+						$notify_arr = $arr;
+
 						break;
 					case 4:
 						// action level 4, remove file and remove from $_FILES array
@@ -420,35 +430,13 @@
 						break;
 				}
 
-                if( $this->get_action( 'iptables' ) )
-                {
+				$this->append_notify_list( $notify_arr, $found );
 
-                    if( !in_array( $this->get_real_ip(), $this->get_action( 'ip_whitelist' ) ) )
-                    {
-                        /*$str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
-                        print($str);*/ //replace with exec...
-                    }
-
-
-                }
-
-                if( $this->get_action( 'log_enabled' ) )
-                {
-
-                    if( !in_array( $this->get_real_ip(), $this->get_action( 'ip_whitelist' ) ) )
-                    {
-                        $str = sprintf( '%s: %s - %s' . "\n", date('Y-m-d H:i:s'),$this->get_real_ip(), $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] );
-                        $handle = fopen( $this->get_action('log_location'), 'a' );
-
-                        if( $handle )
-                        {
-                            fwrite( $handle, $str );
-                            fclose($handle);
-                        }
-                    }
-
-
-                }
+				if( $this->get_action( 'iptables' ) )
+				{
+					$str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
+					print($str);//replace with exec...
+				}
 
 			} else {
 				$arr[ 'scan_results' ] = 'OK';
@@ -481,8 +469,6 @@
 					return 'File Deleted';
 					break;
 			}
-
-            return false;
 		}
 
 		private function trigger_notify( ) {
@@ -503,27 +489,6 @@
 
 				case 1:
 					// notify level 1, email summary
-
-					ob_start();
-					?>
-					<html>
-					<head>
-						<title><?=$this->get_notify('subject')?></title>
-					</head>
-					<body>
-					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>..<br><br>
-
-					Action Taken: <?=$this->action_lvl_to_text()?>
-					</body>
-					</html>
-					<?php
-					$html = ob_get_clean();
-					break;
-
-
-				case 2:
-					// notify level 1, email summary
-
 					ob_start();
 					?>
 					<html>
@@ -533,34 +498,39 @@
 					<body>
 					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.<br><br>
 
-					Action Taken: <?=$this->action_lvl_to_text()?>.<br><br>
-
-					Details<br>===========<br>
+					Action Taken: <?=$this->action_lvl_to_text()?><br>
+					</body>
+					</html>
 					<?php
-                    foreach( $this->get_notify_list() as $file )
-                    {
-                        foreach( $file as $key=>$val ) {
+					$html = ob_get_clean();
+					break;
 
 
-                            if ($key == 'scan_results') {
-                                echo '<br>Scan Results' . '<br>===========<br>';
-                                foreach ($val as $vunkey => $vun) {
-                                    echo 'VUN_ID: ' . $vun['vun_id'] . ': ' . htmlspecialchars($vun['vun_string'])  . '<br>';
-                                }
-                            } else {
-                                echo $key . ': ' . $val . '<br>';
-                            }
-                        }
-                    }
+				case 2:
+					// notify level 2, email detailed
+					ob_start();
 					?>
+					<html>
+					<head>
+						<title><?=$this->get_notify('subject')?></title>
+					</head>
+					<body>
+					Potentially Unwanted Program uploaded on <?=$_SERVER['SERVER_NAME']?>.<br><br>
 
-                    <br>Server<br>===========<br>
-					<?php
-                    foreach( $_SERVER as $key=>$val )
-                    {
-                        echo $key . ': ' . $val . '<br>';
-                    }
-					?>
+					Action Taken: <?=$this->action_lvl_to_text()?><br>
+
+					Details:<br>
+<pre>
+<?php
+print_r( $this->get_notify_list() );
+?>
+</pre>
+					Server:<br>
+<pre>
+<?php
+print_r($_SERVER);
+?>
+</pre>
 
 					</body>
 					</html>
@@ -569,16 +539,14 @@
 					break;
 			}
 
-            if( !$html )
-            {
-                return;
-            }
+			$headers  = 'MIME-Version: 1.0' . "\r\n";
+			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			$headers .= 'To: ' . $this->get_notify('email')  . "\r\n";
+			$headers .= 'From: ' . $this->get_notify('from_email') . "\r\n";
+			$headers .= 'X-Mailer: PHP/' . phpversion();
 
-			$headers = 'From: ' . $this->get_notify('from_email') . "\r\n" .
-				'Reply-To: ' . $this->get_notify('from_email') . "\r\n" .
-				'X-Mailer: PHP/' . phpversion();
 
-			mail( $this->get_notify('email'), $this->get_notify('subject'), $html, $headers );
+			$sent = mail( $this->get_notify('email'), $this->get_notify('subject'), $html, $headers );
 
 		}
 
@@ -598,22 +566,60 @@
 			return $found;
 		}
 
+		public function array_trim(&$item, $key) {
+			$item = trim( $item );
+		}
+
+
+		private function _do_clamav_scan( $location ) {
+			$found = array( );
+			$result = shell_exec( 'clamdscan --no-summary --fdpass ' . $location );
+			$results = explode(' ', $result);
+			array_walk( $results,  array($this, 'array_trim'));
+
+			if( end($results) != 'OK' ) {
+				$found[ ] = array( 'vun_id' => 'clamav', 'vun_string' => $results[1] );
+			}
+
+			return $found;
+
+		}
+
 		/**
 		 * @param string $file
 		 *
 		 * @return array
 		 */
-		public function manual_scan_file( $file = '' ) {
+		public function manual_scan_file( $file = '', $output = false ) {
 			if ( ! is_readable( $file ) ) {
 
-				return array( 'msg' => 'File not found.', 'status' => 'error' );
+				if( $output ) {
+					$this->output_status('ERROR: File not found.');
+					return;
+				}
 
+				return array( 'msg' => 'File not found.', 'status' => 'error' );
 			}
 
-            $found = $this->fgc_chunks( $file, 4096 );
+			$content = file_get_contents( $file );
+			$found   = $this->_do_scan( $content );
 
 			if ( $found ) {
+
+				if( $output ) {
+					$this->output_status('PUP: Thread detected.');
+					foreach( $found as $key=>$val) {
+						$this->output_status( 'VUNID[' . $val['vun_id'] . '] ' . $val['vun_string'] );
+					}
+					return;
+				}
+
 				return array( 'msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP' );
+			}
+
+			if( $output ) {
+				$this->output_status('CLEAN');
+				return;
 			}
 
 			return array( 'msg' => 'File clean', 'status' => 'OK' );
@@ -638,6 +644,26 @@
 		/**
 		 *
 		 */
+		public function cli_scan( ) {
+
+			global $argv;
+
+			$this->output_status( 'Running manual scan' );
+			$this->output_status( '--------------------' );
+			$this->output_status( ' ' );
+
+			if( !isset( $argv[2] ) )
+			{
+				$this->output_status( 'argument 2 must be a file' );
+				die();
+			}
+
+			$this->manual_scan_file( $argv[2], true );
+		}
+
+		/**
+		 *
+		 */
 		public function update_definitions( ) {
 
 			$this->output_status( 'Updating definitions' );
@@ -646,7 +672,7 @@
 			$this->output_status( ' ' );
 
 			set_time_limit(0);
-			$definitions = file_get_contents( $this->get_definitions_url() );
+			$definitions = @file_get_contents( $this->get_definitions_url() );
 
 			if( !$definitions )
 			{
