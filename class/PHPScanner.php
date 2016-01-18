@@ -71,6 +71,10 @@
 
 			$notify = $action = array();
 
+			if( !isset($_SERVER['SERVER_NAME']) ) {
+				$_SERVER['SERVER_NAME'] = 'server';
+			}
+
 			require_once PHPSC_ROOT . '/conf.php';
 
 			/**
@@ -298,7 +302,7 @@
 		 *
 		 */
 		private function check_files() {
-			if ( ! isset( $_FILES ) ) {
+			if ( ! isset( $_FILES ) || empty($_FILES) ) {
 				return;
 			}
 
@@ -732,23 +736,33 @@ print_r($_SERVER);
 
 
 		private function output_version() {
+			$this->output_status("\n");
+			$this->output_status("##############################");
 			$this->output_status( 'PHPScanner ' . $this->get_phpsc_version() . ' By ChubbyNinja' );
-			$this->output_status( 'chubbyninja.co.uk' );
+			$this->output_status( 'Author: chubbyninja.co.uk' );
+			$this->output_status( 'Support: https://github.com/ChubbyNinja/PHPScanner' );
+			$this->output_status("##############################");
+			$this->output_status("\n");
 		}
 
 		private function output_commands() {
 
 			$this->output_version();
-			$this->output_status( '---------------' );
-			$this->output_status('Available Commands: ' . "\n");
+			$this->output_status('Available Commands ');
+			$this->output_status( '-=-=-=-=-=-=-=-=-=-' . "\n");
 
-			$this->output_status('-version			Returns version number and author information');
-			$this->output_status('-update				Runs definitions update in verbose mode');
-			$this->output_status('-silent-update		Runs definitions update in silent mode');
-			$this->output_status('-help				Returns this list of commands');
+			$this->output_status(' -version		Returns version number and author information');
+			$this->output_status(' -scan [filename]	Scans the given file');
+			$this->output_status(' -update		Runs definitions update in verbose mode');
+			$this->output_status(' -silent-update		Runs definitions update in silent mode');
+			$this->output_status(' -help			Returns this list of commands');
 			$this->output_status("\n");
-			$this->output_status('-u					Alias of -update');
-			$this->output_status('-su					Alias of -silent-update');
+			$this->output_status('Aliases');
+			$this->output_status( '-=-=-=-' . "\n");
+			$this->output_status(' -u		Alias of -update');
+			$this->output_status(' -su		Alias of -silent-update');
+			$this->output_status(' -su		Alias of -silent-update');
+			$this->output_status("\n");
 
 		}
 
