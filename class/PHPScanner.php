@@ -33,12 +33,11 @@
 		private $silent_mode = false;
 
 
-		private $phpsc_version = '1.0';
+		private $phpsc_version = '1.0.1';
 
 
 		private $notify = array( );
 		private $action = array( );
-
 		private $notify_list = array( );
 
 		/**
@@ -434,9 +433,32 @@
 
 				if( $this->get_action( 'iptables' ) )
 				{
-					$str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
-					//print($str);
+					if( !in_array( $this->get_real_ip(), $this->get_action( 'ip_whitelist' ) ) ) {
+						$str = sprintf($this->get_action('iptables_string'), $this->get_real_ip());
+						//print($str);
+					}
+
 				}
+
+				if( $this->get_action( 'log_enabled' ) )
+				{
+
+					if( !in_array( $this->get_real_ip(), $this->get_action( 'ip_whitelist' ) ) )
+					{
+						$str = sprintf( '%s: %s - %s' . "\n", date('Y-m-d H:i:s'),$this->get_real_ip(), $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] );
+						$handle = fopen( $this->get_action('log_location'), 'a' );
+
+						if( $handle )
+						{
+							fwrite( $handle, $str );
+							fclose($handle);
+						}
+					}
+
+				}
+
+
+
 
 			} else {
 				$arr[ 'scan_results' ] = 'OK';
