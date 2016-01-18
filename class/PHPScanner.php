@@ -435,7 +435,7 @@
 				if( $this->get_action( 'iptables' ) )
 				{
 					$str = sprintf( $this->get_action('iptables_string'), $this->get_real_ip() );
-					print($str);//replace with exec...
+					//print($str);
 				}
 
 			} else {
