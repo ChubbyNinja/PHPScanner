@@ -14,7 +14,7 @@
         /**
          * @var array
          */
-        private $definitions = [];
+        private $definitions = array();
         /**
          * @var string
          */
@@ -34,9 +34,9 @@
 
         private $phpsc_version = '1.0.1';
 
-        private $notify = [];
-        private $action = [];
-        private $notify_list = [];
+        private $notify = array();
+        private $action = array();
+        private $notify_list = array();
 
         /**
          *
@@ -58,14 +58,14 @@
             // scan _FILES
             $this->check_files();
 
-            if ($this->get_env_type() == 'cli') {
+            if ($this->get_env_type() === 'cli') {
                 $this->run_cli_mode();
             }
         }
 
         private function load_config()
         {
-            $notify = $action = [];
+            $notify = $action = array();
 
             if (!isset($_SERVER['SERVER_NAME'])) {
                 $_SERVER['SERVER_NAME'] = 'server';
@@ -76,8 +76,8 @@
             /*
              * WARNING: YOU SHOULD NOT EDIT THIS FUNCTION - EDIT CONFIG IN conf.php
              */
-            $notify_default = ['level' => 1, 'email' => 'root@localhost', 'subject' => 'PUP Found on '.$_SERVER['SERVER_NAME']];
-            $action_default = ['level' => 1, 'iptables' => false, 'iptables_string' => 'iptables -I INPUT -s %s -j DROP', 'threshold' => 3];
+            $notify_default = array('level' => 1, 'email' => 'root@localhost', 'subject' => 'PUP Found on '.$_SERVER['SERVER_NAME']);
+            $action_default = array('level' => 1, 'iptables' => false, 'iptables_string' => 'iptables -I INPUT -s %s -j DROP', 'threshold' => 3);
 
             $this->set_notify(array_merge($notify_default, $notify));
             $this->set_action(array_merge($action_default, $action));
@@ -214,7 +214,7 @@
          */
         private function check_env_type()
         {
-            if (PHP_SAPI == 'cli') {
+            if (PHP_SAPI === 'cli') {
                 $this->set_env_type('cli');
             }
         }
@@ -288,7 +288,7 @@
          */
         private function load_definitions()
         {
-            $definitions = [];
+            $definitions = array();
 
             require $this->get_definitions_file();
 
@@ -313,7 +313,7 @@
                     // multiple files
 
                     foreach ($file[ 'name' ] as $file_key => $file_name) {
-                        $tmp = [];
+                        $tmp = array();
                         $tmp[ 'tmp_name' ] = $file[ 'tmp_name' ][ $file_key ];
                         $tmp[ 'size' ] = $file['size'][$file_key];
 
@@ -394,7 +394,7 @@
                         } else {
                             unset($_FILES[ $key ]);
                         }
-                        $arr = [];
+                        $arr = array();
 
                         break;
                     case 3:
@@ -417,7 +417,7 @@
                         } else {
                             unset($_FILES[ $key ]);
                         }
-                        $arr = [];
+                        $arr = array();
 
                         break;
                 }
@@ -444,7 +444,7 @@
                 }
             } else {
                 $arr[ 'scan_results' ] = 'OK';
-                $arr[ 'scan_details' ] = [];
+                $arr[ 'scan_details' ] = array();
             }
 
             return $arr;
@@ -556,10 +556,10 @@ print_r($_SERVER);
          */
         private function _do_scan($content)
         {
-            $found = [];
+            $found = array();
             foreach ($this->get_definitions() as $vun_id => $find) {
                 if (stripos($content, $find) !== false) {
-                    $found[ ] = ['vun_id' => $vun_id, 'vun_string' => $find];
+                    $found[ ] = array('vun_id' => $vun_id, 'vun_string' => $find);
                 }
             }
 
@@ -573,13 +573,13 @@ print_r($_SERVER);
 
         private function _do_clamav_scan($location)
         {
-            $found = [];
+            $found = array();
             $result = shell_exec('clamdscan --no-summary --fdpass '.$location);
             $results = explode(' ', $result);
-            array_walk($results, [$this, 'array_trim']);
+            array_walk($results, array($this, 'array_trim'));
 
-            if (end($results) != 'OK') {
-                $found[ ] = ['vun_id' => 'clamav', 'vun_string' => $results[1]];
+            if (end($results) !== 'OK') {
+                $found[ ] = array('vun_id' => 'clamav', 'vun_string' => $results[1]);
             }
 
             return $found;
@@ -599,7 +599,7 @@ print_r($_SERVER);
                     return;
                 }
 
-                return ['msg' => 'File not found.', 'status' => 'error'];
+                return array('msg' => 'File not found.', 'status' => 'error');
             }
 
             $content = file_get_contents($file);
@@ -615,7 +615,7 @@ print_r($_SERVER);
                     return;
                 }
 
-                return ['msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP'];
+                return array('msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP');
             }
 
             if ($output) {
@@ -624,7 +624,7 @@ print_r($_SERVER);
                 return;
             }
 
-            return ['msg' => 'File clean', 'status' => 'OK'];
+            return array('msg' => 'File clean', 'status' => 'OK');
         }
 
         /**
@@ -637,10 +637,10 @@ print_r($_SERVER);
             $found = $this->_do_scan($string);
 
             if ($found) {
-                return ['msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP'];
+                return array('msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP');
             }
 
-            return ['msg' => 'File clean', 'status' => 'OK'];
+            return array('msg' => 'File clean', 'status' => 'OK');
         }
 
         /**

@@ -57,7 +57,7 @@ $action['iptables_string'] = 'iptables -I INPUT -s %s -j DROP'; /* working in 1.
  *  IPTABLES will not add any of the follow IP addresses - this is a failsafe against IP spoofing.
  *  WARNING: ALTER AT OWN RISK
  */
-$action['ip_whitelist'] = ['127.0.0.1'];
+$action['ip_whitelist'] = array('127.0.0.1');
 
 /* @var $action['log_enabled']
  *  Log IP addresses that upload PUP
