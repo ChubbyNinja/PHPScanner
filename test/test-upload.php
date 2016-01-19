@@ -16,12 +16,14 @@
 </head>
 <body>
 <?php
-if( isset($_FILES) ) {
-?>
+if (isset($_FILES)) {
+    ?>
     <pre>
-        <?php var_dump( $_FILES ); ?>
+        <?php var_dump($_FILES);
+    ?>
     </pre>
 <?php
+
 }
 ?>
 <hr>
