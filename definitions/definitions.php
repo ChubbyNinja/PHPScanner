@@ -1,5 +1,6 @@
-<?php 
-$definitions    = array( );
+<?php
+
+$definitions = [];
 $definitions[ ] = '-type f -name .htpasswd';
 $definitions[ ] = '-type f -name ".htpasswd"';
 $definitions[ ] = 'netstat';
@@ -52,5 +53,3 @@ $definitions[ ] = 'n=\'4.5t4.5t52.5t51t16t20t50t55.5t49.5t58.5t54.5t50.5t55t58t2
 
 // .html definitions
 $definitions[ ] = '<TITLE>hacked by';
-
-	
