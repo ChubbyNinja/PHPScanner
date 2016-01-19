@@ -38,6 +38,8 @@
         private $action = array();
         private $notify_list = array();
 
+        private $db_connection = null;
+
         /**
          *
          */
@@ -61,9 +63,13 @@
             if ($this->get_env_type() === 'cli') {
                 $this->run_cli_mode();
             }
+
+            if( $this->get_env_type() == 'web' ) {
+                $this->check_web_panel();
+            }
         }
 
-        private function load_config()
+        public function load_config()
         {
             $notify = $action = array();
 
@@ -71,7 +77,7 @@
                 $_SERVER['SERVER_NAME'] = 'server';
             }
 
-            require_once PHPSC_ROOT.'/conf.php';
+            require PHPSC_ROOT.'/conf.php';
 
             /*
              * WARNING: YOU SHOULD NOT EDIT THIS FUNCTION - EDIT CONFIG IN conf.php
@@ -135,6 +141,40 @@
             $this->action = $action;
         }
 
+        private function check_web_panel()
+        {
+            if( isset($_GET['phpsc']) ) {
+                require PHPSC_ROOT . '/webpanel/index.php';
+                die();
+            }
+        }
+
+        /**
+         * @return null
+         */
+        public function get_db_connection()
+        {
+            if( !$this->db_connection ) {
+                require PHPSC_ROOT . '/class/Db.php';
+                $db = new db( $this->get_action('mysql_host'),$this->get_action('mysql_db'),$this->get_action('mysql_user'),$this->get_action('mysql_pass') );
+                $this->set_db_connection($db);
+
+                return $this->get_db_connection();
+            }
+
+            return $this->db_connection;
+        }
+
+        /**
+         * @param null $db_connection
+         */
+        public function set_db_connection($db_connection)
+        {
+            $this->db_connection = $db_connection;
+        }
+
+
+
         /**
          *
          */
@@ -177,6 +217,11 @@
 
         public function get_real_ip()
         {
+
+            if( !isset($_SERVER['REMOTE_ADDR']) ) {
+                return '0.0.0.0';
+            }
+
             $ipAddress = $_SERVER['REMOTE_ADDR'];
             if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
                 $ipAddress = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
@@ -316,6 +361,7 @@
                         $tmp = array();
                         $tmp[ 'tmp_name' ] = $file[ 'tmp_name' ][ $file_key ];
                         $tmp[ 'size' ] = $file['size'][$file_key];
+                        $tmp[ 'name' ] = $file['name'][$file_key];
 
                         $tmp = $this->do_scan($tmp, $key, $file_key);
 
@@ -424,6 +470,36 @@
 
                 $this->append_notify_list($notify_arr, $found);
 
+
+                if($this->get_action('mysql_enabled') ) {
+
+                    $db = $this->get_db_connection();
+                    $sql = "INSERT INTO `phpsc_vault` (`ip`,`file`,`threat`,`server_details`) VALUES(:ip,:file,:threat,:server_details)";
+
+                    $sql_arr = [];
+                    $sql_arr[':ip'] = $this->get_real_ip();
+                    $sql_arr[':file'] = json_encode( $arr );
+                    $sql_arr[':threat'] = json_encode( $found );
+                    $sql_arr[':server_details'] = json_encode( $_SERVER );
+
+                    $db->run_sql($sql, $sql_arr, false);
+                }
+
+                if ($this->get_action('log_enabled')) {
+                    if (!in_array($this->get_real_ip(), $this->get_action('ip_whitelist'))) {
+                        $str = sprintf('%s: %s - %s'."\n", date('Y-m-d H:i:s'), $this->get_real_ip(), $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
+
+                        if( is_writable($this->get_action('log_location'))) {
+                            $handle = fopen($this->get_action('log_location'), 'a');
+
+                            if ($handle) {
+                                fwrite($handle, $str);
+                                fclose($handle);
+                            }
+                        }
+                    }
+                }
+
                 if ($this->get_action('iptables')) {
                     if (!in_array($this->get_real_ip(), $this->get_action('ip_whitelist'))) {
                         $str = sprintf($this->get_action('iptables_string'), $this->get_real_ip());
@@ -431,17 +507,6 @@
                     }
                 }
 
-                if ($this->get_action('log_enabled')) {
-                    if (!in_array($this->get_real_ip(), $this->get_action('ip_whitelist'))) {
-                        $str = sprintf('%s: %s - %s'."\n", date('Y-m-d H:i:s'), $this->get_real_ip(), $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
-                        $handle = fopen($this->get_action('log_location'), 'a');
-
-                        if ($handle) {
-                            fwrite($handle, $str);
-                            fclose($handle);
-                        }
-                    }
-                }
             } else {
                 $arr[ 'scan_results' ] = 'OK';
                 $arr[ 'scan_details' ] = array();
@@ -602,10 +667,25 @@ print_r($_SERVER);
                 return array('msg' => 'File not found.', 'status' => 'error');
             }
 
-            $content = file_get_contents($file);
-            $found = $this->_do_scan($content);
+            // size of upload exceeds our specified max_file_size variable in config
+            if (filesize($file) > $this->get_action('max_file_size')) {
+                $this->output_status('ERROR: File too large.');
+                return;
+            }
+
+            if ($this->get_action('use_clamav')) {
+                $found = $this->_do_clamav_scan($file);
+            } else {
+                $content = @file_get_contents($file);
+                if (!$content && $output) {
+                    $this->output_status('ERROR: File not found.');
+                    return;
+                }
+                $found = $this->_do_scan($content);
+            }
 
             if ($found) {
+
                 if ($output) {
                     $this->output_status('PUP: Thread detected.');
                     foreach ($found as $key => $val) {
@@ -745,4 +825,6 @@ print_r($_SERVER);
                 echo $output."\n";
             }
         }
+
+
     }

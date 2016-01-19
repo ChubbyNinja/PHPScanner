@@ -85,7 +85,6 @@ $action['threshold'] = 3;
  *  integer
  *  Default: 2097152
  */
-
 $action['max_file_size'] = 2097152;
 
 /* @boolean $action['use_clamav']
@@ -93,3 +92,23 @@ $action['max_file_size'] = 2097152;
  *  http://www.clamav.net/downloads
  */
 $action['use_clamav'] = true;
+
+
+/* @var $action['web_password']
+ *  Password for accessing the web interface
+ *  string
+ *  Default: changeme
+ */
+$action['web_password'] = 'changeme';
+
+
+/* @var $action['mysql_enabled']
+ *  Enable MySQL logging - used for the web interface
+ *  boolean
+ *  Default: false
+ */
+$action['mysql_enabled'] = false;
+$action['mysql_host'] = 'localhost';
+$action['mysql_user'] = 'phpsc';
+$action['mysql_pass'] = 'changeme';
+$action['mysql_db'] = 'phpsc';
