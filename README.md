@@ -1,4 +1,4 @@
-# PHPScanner
+# PHPScanner [![StyleCI](https://styleci.io/repos/34728779/shield)](https://styleci.io/repos/34728779)
 PHPScanner is a small and simple script which scans uploaded content for known scripts like c99 before your PHP script handles the request
 
 ## How to Install
