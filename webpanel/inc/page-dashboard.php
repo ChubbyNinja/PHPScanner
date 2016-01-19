@@ -7,7 +7,6 @@
  * Date: 1/19/2016
  * Time: 12:00 PM
  */
-
 ?>
 <div class="info-box">
     <h1>PHPSC Vault</h1>
@@ -23,11 +22,10 @@
         <?php
         $items = $Webpanel->get_vault();
 
-        if( $items )
-        {
-            foreach( $items as $item ) {
-                $file = json_decode( $item['file'] );
-                $threat = json_decode( $item['threat'] );
+        if ($items) {
+            foreach ($items as $item) {
+                $file = json_decode($item['file']);
+                $threat = json_decode($item['threat']);
                 ?>
                 <tr>
                     <td><?=date('jS F Y', strtotime($item['date']))?></td>
@@ -37,6 +35,7 @@
                     <td><a href="#" class="info-icon">i</a></td>
                 </tr>
             <?php
+
             }
         }
         ?>

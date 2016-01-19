@@ -64,7 +64,7 @@
                 $this->run_cli_mode();
             }
 
-            if( $this->get_env_type() == 'web' ) {
+            if ($this->get_env_type() === 'web') {
                 $this->check_web_panel();
             }
         }
@@ -143,8 +143,8 @@
 
         private function check_web_panel()
         {
-            if( isset($_GET['phpsc']) ) {
-                require PHPSC_ROOT . '/webpanel/index.php';
+            if (isset($_GET['phpsc'])) {
+                require PHPSC_ROOT.'/webpanel/index.php';
                 die();
             }
         }
@@ -154,9 +154,9 @@
          */
         public function get_db_connection()
         {
-            if( !$this->db_connection ) {
-                require PHPSC_ROOT . '/class/Db.php';
-                $db = new db( $this->get_action('mysql_host'),$this->get_action('mysql_db'),$this->get_action('mysql_user'),$this->get_action('mysql_pass') );
+            if (!$this->db_connection) {
+                require PHPSC_ROOT.'/class/Db.php';
+                $db = new db($this->get_action('mysql_host'), $this->get_action('mysql_db'), $this->get_action('mysql_user'), $this->get_action('mysql_pass'));
                 $this->set_db_connection($db);
 
                 return $this->get_db_connection();
@@ -172,8 +172,6 @@
         {
             $this->db_connection = $db_connection;
         }
-
-
 
         /**
          *
@@ -217,8 +215,7 @@
 
         public function get_real_ip()
         {
-
-            if( !isset($_SERVER['REMOTE_ADDR']) ) {
+            if (!isset($_SERVER['REMOTE_ADDR'])) {
                 return '0.0.0.0';
             }
 
@@ -470,17 +467,15 @@
 
                 $this->append_notify_list($notify_arr, $found);
 
-
-                if($this->get_action('mysql_enabled') ) {
-
+                if ($this->get_action('mysql_enabled')) {
                     $db = $this->get_db_connection();
-                    $sql = "INSERT INTO `phpsc_vault` (`ip`,`file`,`threat`,`server_details`) VALUES(:ip,:file,:threat,:server_details)";
+                    $sql = 'INSERT INTO `phpsc_vault` (`ip`,`file`,`threat`,`server_details`) VALUES(:ip,:file,:threat,:server_details)';
 
-                    $sql_arr = [];
+                    $sql_arr = array();
                     $sql_arr[':ip'] = $this->get_real_ip();
-                    $sql_arr[':file'] = json_encode( $arr );
-                    $sql_arr[':threat'] = json_encode( $found );
-                    $sql_arr[':server_details'] = json_encode( $_SERVER );
+                    $sql_arr[':file'] = json_encode($arr);
+                    $sql_arr[':threat'] = json_encode($found);
+                    $sql_arr[':server_details'] = json_encode($_SERVER);
 
                     $db->run_sql($sql, $sql_arr, false);
                 }
@@ -489,7 +484,7 @@
                     if (!in_array($this->get_real_ip(), $this->get_action('ip_whitelist'))) {
                         $str = sprintf('%s: %s - %s'."\n", date('Y-m-d H:i:s'), $this->get_real_ip(), $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
 
-                        if( is_writable($this->get_action('log_location'))) {
+                        if (is_writable($this->get_action('log_location'))) {
                             $handle = fopen($this->get_action('log_location'), 'a');
 
                             if ($handle) {
@@ -506,7 +501,6 @@
                         //print($str);
                     }
                 }
-
             } else {
                 $arr[ 'scan_results' ] = 'OK';
                 $arr[ 'scan_details' ] = array();
@@ -670,6 +664,7 @@ print_r($_SERVER);
             // size of upload exceeds our specified max_file_size variable in config
             if (filesize($file) > $this->get_action('max_file_size')) {
                 $this->output_status('ERROR: File too large.');
+
                 return;
             }
 
@@ -679,13 +674,13 @@ print_r($_SERVER);
                 $content = @file_get_contents($file);
                 if (!$content && $output) {
                     $this->output_status('ERROR: File not found.');
+
                     return;
                 }
                 $found = $this->_do_scan($content);
             }
 
             if ($found) {
-
                 if ($output) {
                     $this->output_status('PUP: Thread detected.');
                     foreach ($found as $key => $val) {
@@ -825,6 +820,4 @@ print_r($_SERVER);
                 echo $output."\n";
             }
         }
-
-
     }
