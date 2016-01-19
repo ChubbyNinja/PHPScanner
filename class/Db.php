@@ -1,11 +1,5 @@
 <?php
 
-    /**
-     * Created for survey-initiative-system
-     * User: Danny Hearnah
-     * Date: 15/04/2015
-     * Time: 13:58
-     */
     class db
     {
 
