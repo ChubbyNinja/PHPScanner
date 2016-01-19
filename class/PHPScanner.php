@@ -498,7 +498,7 @@
 		}
 
 		private function trigger_notify( ) {
-			if( empty( $this->get_notify_list() ) )
+			if( !$this->get_notify_list() )
 			{
 				return;
 			}
