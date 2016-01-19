@@ -5,7 +5,7 @@
     <title>PHPScanner web panel</title>
 
     <style>
-        <?=file_get_contents(PHPSC_ROOT . '/webpanel/css/style.css')?>
+        <?=file_get_contents(PHPSC_ROOT.'/webpanel/css/style.css')?>
     </style>
 
 

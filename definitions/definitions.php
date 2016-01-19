@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Created for PHPScanner
+ * User: Danny Hearnah
+ * Author: ChubbyNinja
+ * URL: https://github.com/ChubbyNinja/PHPScanner
+ */
+
 $definitions = array();
 $definitions[ ] = '-type f -name .htpasswd';
 $definitions[ ] = '-type f -name ".htpasswd"';

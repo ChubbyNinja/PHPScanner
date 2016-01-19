@@ -1,4 +1,12 @@
 <?php
+
+/*
+ * Created for PHPScanner
+ * User: Danny Hearnah
+ * Author: ChubbyNinja
+ * URL: https://github.com/ChubbyNinja/PHPScanner
+ */
+
 /**
  * [ NOTIFICATION ].
  */
@@ -93,14 +101,12 @@ $action['max_file_size'] = 2097152;
  */
 $action['use_clamav'] = true;
 
-
 /* @var $action['web_password']
  *  Password for accessing the web interface
  *  string
  *  Default: changeme
  */
 $action['web_password'] = 'changeme';
-
 
 /* @var $action['mysql_enabled']
  *  Enable MySQL logging - used for the web interface
