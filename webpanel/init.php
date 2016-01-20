@@ -16,7 +16,6 @@
  * Time: 11:40 AM
  */
 if (isset($_POST['phpsc_action'])) {
-
     switch ($_POST['phpsc_action']) {
 
         case 'login':
@@ -26,8 +25,7 @@ if (isset($_POST['phpsc_action'])) {
 }
 
 
-if (isset($_GET['phpsc_action']) && $Webpanel->is_authenticated() ) {
-
+if (isset($_GET['phpsc_action']) && $Webpanel->is_authenticated()) {
     switch ($_GET['phpsc_action']) {
 
         case 'download':

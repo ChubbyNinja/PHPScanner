@@ -84,20 +84,20 @@ class Webpanel extends PHPScanner
         return $db->run_sql($sql);
     }
 
-    public function get_vault_item( $id )
+    public function get_vault_item($id)
     {
         $db = parent::get_db_connection();
 
         $sql = 'SELECT * FROM `phpsc_vault` WHERE `id`=:id';
 
-        return $db->run_sql($sql, [':id'=>$id], 'fetch');
+        return $db->run_sql($sql, array(':id'=>$id), 'fetch');
     }
 
-    public function download_file( $id )
+    public function download_file($id)
     {
-        $item = $this->get_vault_item( $id );
+        $item = $this->get_vault_item($id);
 
-        if( !$item ) {
+        if (!$item) {
             return false;
         }
 

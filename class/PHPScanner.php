@@ -395,7 +395,7 @@
                 $found = $this->_do_clamav_scan($arr['tmp_name']);
             }
 
-            if($this->get_action('use_phpsc')) {
+            if ($this->get_action('use_phpsc')) {
                 $content = @file_get_contents($arr['tmp_name']);
                 if (!$content) {
                     return $arr;
@@ -676,7 +676,7 @@ print_r($_SERVER);
                 $found = $this->_do_clamav_scan($file);
             }
 
-            if($this->get_action('use_phpsc')) {
+            if ($this->get_action('use_phpsc')) {
                 $content = @file_get_contents($file);
                 if (!$content) {
                     return false;
