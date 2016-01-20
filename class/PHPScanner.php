@@ -390,15 +390,17 @@
                 return $arr;
             }
 
+            $found = array();
             if ($this->get_action('use_clamav')) {
                 $found = $this->_do_clamav_scan($arr['tmp_name']);
-            } else {
+            }
+
+            if($this->get_action('use_phpsc')) {
                 $content = @file_get_contents($arr['tmp_name']);
                 if (!$content) {
                     return $arr;
                 }
-
-                $found = $this->_do_scan($content);
+                $found = $this->_do_scan($content, $found);
             }
 
             if ((count($found) >= $this->get_action('threshold')) || (count($found) && $this->get_action('use_clamav'))) {
@@ -546,6 +548,8 @@
 
                 case 0:
                     // notify level 0, do nothing
+                    return;
+
                     break;
 
                 case 1:
@@ -613,12 +617,11 @@ print_r($_SERVER);
          *
          * @return array
          */
-        private function _do_scan($content)
+        private function _do_scan($content, $found)
         {
-            $found = array();
             foreach ($this->get_definitions() as $vun_id => $find) {
                 if (stripos($content, $find) !== false) {
-                    $found[ ] = array('vun_id' => $vun_id, 'vun_string' => $find);
+                    $found[ ] = array('vun_id' => $vun_id, 'vun_string' => htmlspecialchars($find));
                 }
             }
 
@@ -668,16 +671,17 @@ print_r($_SERVER);
                 return;
             }
 
+            $found = array();
             if ($this->get_action('use_clamav')) {
                 $found = $this->_do_clamav_scan($file);
-            } else {
-                $content = @file_get_contents($file);
-                if (!$content && $output) {
-                    $this->output_status('ERROR: File not found.');
+            }
 
-                    return;
+            if($this->get_action('use_phpsc')) {
+                $content = @file_get_contents($file);
+                if (!$content) {
+                    return false;
                 }
-                $found = $this->_do_scan($content);
+                $found = $this->_do_scan($content, $found);
             }
 
             if ($found) {
@@ -709,7 +713,7 @@ print_r($_SERVER);
          */
         public function manual_scan_string($string = '')
         {
-            $found = $this->_do_scan($string);
+            $found = $this->_do_scan($string, array());
 
             if ($found) {
                 return array('msg' => 'PUP Found', 'found' => $found, 'status' => 'PUP');

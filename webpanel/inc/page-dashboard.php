@@ -19,6 +19,7 @@
             <th>File</th>
             <th>Threat</th>
             <th>Info</th>
+            <th class="text-center">Download</th>
         </thead>
         <tbody>
         <?php
@@ -35,7 +36,7 @@
                     <td><?=$file->name?></td>
                     <td><?=$threat[0]->vun_string?></td>
                     <td>
-                        <a data-open="info-icon-modal-<?=$item['id']?>" class="info-icon">i</a>
+                        <a data-open="info-icon-modal-<?=$item['id']?>" class="fa fa-info-circle"></a>
 
                         <div class="reveal large" id="info-icon-modal-<?=$item['id']?>" data-reveal>
                             <h1>Details</h1>
@@ -89,6 +90,7 @@ $details = json_decode($item['server_details'], true);
 </pre>
                         </div>
                     </td>
+                    <td class="text-center"><a href="?phpsc&phpsc_action=download&phpsc_id=<?=$item['id']?>" class="fa fa-download" title="Download infected file"></a></td>
                 </tr>
             <?php
 

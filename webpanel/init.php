@@ -16,14 +16,22 @@
  * Time: 11:40 AM
  */
 if (isset($_POST['phpsc_action'])) {
+
     switch ($_POST['phpsc_action']) {
 
         case 'login':
-
-            $loggedin = $Webpanel->try_authenticate($this->get_action('web_password'), $_POST['phpsc_password']);
-            var_dump($loggedin);
-
+            $Webpanel->try_authenticate($this->get_action('web_password'), $_POST['phpsc_password']);
             break;
+    }
+}
 
+
+if (isset($_GET['phpsc_action']) && $Webpanel->is_authenticated() ) {
+
+    switch ($_GET['phpsc_action']) {
+
+        case 'download':
+            $Webpanel->download_file($_GET['phpsc_id']);
+            break;
     }
 }

@@ -19,8 +19,8 @@
 if (isset($_FILES)) {
     ?>
     <pre>
-        <?php var_dump($_FILES);
-    ?>
+        <?php var_dump($_FILES); ?>
+        <?php var_dump($_POST); ?>
     </pre>
 <?php
 
@@ -28,8 +28,9 @@ if (isset($_FILES)) {
 ?>
 <hr>
 
-<form action="" method="post" enctype="multipart/form-data">
+<form action="test-upload.php" method="post" enctype="multipart/form-data">
     <input type="file" name="file[]" multiple>
+    <input type="text" name="test" value="tester">
     <input type="submit">
 </form>
 

@@ -83,4 +83,36 @@ class Webpanel extends PHPScanner
 
         return $db->run_sql($sql);
     }
+
+    public function get_vault_item( $id )
+    {
+        $db = parent::get_db_connection();
+
+        $sql = 'SELECT * FROM `phpsc_vault` WHERE `id`=:id';
+
+        return $db->run_sql($sql, [':id'=>$id], 'fetch');
+    }
+
+    public function download_file( $id )
+    {
+        $item = $this->get_vault_item( $id );
+
+        if( !$item ) {
+            return false;
+        }
+
+        $file = json_decode($item['file']);
+
+        if (file_exists($file->phpsc_vault)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file->name).'.txt"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file->phpsc_vault));
+            readfile($file->phpsc_vault);
+            exit;
+        }
+    }
 }
