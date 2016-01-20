@@ -101,6 +101,12 @@ $action['max_file_size'] = 2097152;
  */
 $action['use_clamav'] = true;
 
+
+/* @boolean $action['use_phpsc']
+ *  Use phpsc for scanning (recommended), use our plain text definitions detection - good for detecting defacements, JS and PHP content
+ */
+$action['use_phpsc'] = true;
+
 /* @var $action['web_password']
  *  Password for accessing the web interface
  *  string

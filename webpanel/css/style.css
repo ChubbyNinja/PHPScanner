@@ -1,54 +1,4 @@
-ml, body, div, span, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, font, img,
-b, u, i,
-dl, dt, dd, ol, li, ul {
-    border: 0 none inherit;
-    padding: 0;
-    outline: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-    background: transparent;
-    text-align: left;
-    margin: 0;
-}
-
-/* remember to define focus styles! */
-:focus {
-    outline: 0;
-}
-
-/* --------------- remove apple's default styling --------------- */
-input[type="text"] {
-    border-radius: 0;
-    padding: 1px 0 1px 2px;
-    -webkit-appearance: none;
-}
-
-
-input[type=text].prompt-postcode {
-    border: 1px solid rgb(238, 238, 238);
-    margin-left: 10px;
-    width: 66px;
-    padding: 1px 4px !important;
-}
-
-
-button.fa {
-    background-color:transparent;
-    border:none;
-    cursor:pointer;
-}
-
-input[type="button"], input[type="submit"], textarea {
-    border-radius: 0;
-    -webkit-appearance: none;
-}
-
 body {
-    margin: 0 auto;
-    font-size: 14px;
-    line-height: 1.42857143;
     color: #444444;
     font-family: 'Raleway', sans-serif;
     font-weight: 400;
@@ -59,50 +9,25 @@ a {
     color: #333;
 }
 
-li {
-    list-style-type: none;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 400;
-}
-
 p {
     font-size: 14px;
 }
 
 
-.wrapper {
-    width:100%;
-    max-width:990px;
-    margin-left:auto;
-    margin-right:auto;
-    padding-top:5vh;
-    padding-left:10px;
-    padding-right:10px;
-    box-sizing: border-box;
-}
+
 
 header h1 {
     font-size:30px;
     font-weight: 700;
 }
 
-header h2 {
-    font-size:20px;
-    font-weight:500;
-}
 
 header {
     padding-bottom:2vh;
+    padding-top: 2vh;
     border-bottom:solid 3px #eee;
     box-sizing:border-box;
 }
-
-.content {
-    padding:80px 20px;
-}
-
 
 .login-form {
     text-align:center;
@@ -169,4 +94,14 @@ a.info-icon {
     color: #fff;
     text-align: center;
     font-family:"Times New Roman";
+}
+
+
+.info-box {
+    padding-bottom:2vh;
+    padding-top: 2vh;
+}
+
+pre.modal-code {
+    font-size:10px;
 }
