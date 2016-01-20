@@ -48,41 +48,44 @@
 THREAT DETAILS
 -=-=-=-=-=-=-=-
 <?php
-foreach($threat as $key=>$val) {
-
+foreach ($threat as $key=>$val) {
     foreach ($val as $tkey=>$t) {
-?>
+        ?>
 <?= $tkey ?>: <?= $t . "\n" ?>
 <?php
+
     }
 }
-?>
+                ?>
 
 
 UPLOAD DETAILS
 -=-=-=-=-=-=-=-
 <?php
-foreach($file as $key=>$val){
-
-if( !is_string($val) ){ continue; }
-?>
+foreach ($file as $key=>$val) {
+    if (!is_string($val)) {
+        continue;
+    }
+    ?>
 <?=$key?>: <?=$val . "\n"?>
 <?php
+
 }
-?>
+                ?>
 
 
 SERVER DETAILS
 -=-=-=-=-=-=-=-
 <?php
-$details = json_decode($item['server_details'],true);
-foreach($details as $key=>$val){
-?>
+$details = json_decode($item['server_details'], true);
+                foreach ($details as $key=>$val) {
+                    ?>
 <?=$key?>: <?=$val . "\n"?>
 <?php
-}
 
-?>
+                }
+
+                ?>
 </pre>
                         </div>
                     </td>
