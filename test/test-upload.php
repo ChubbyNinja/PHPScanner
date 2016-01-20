@@ -19,8 +19,10 @@
 if (isset($_FILES)) {
     ?>
     <pre>
-        <?php var_dump($_FILES); ?>
-        <?php var_dump($_POST); ?>
+        <?php var_dump($_FILES);
+    ?>
+        <?php var_dump($_POST);
+    ?>
     </pre>
 <?php
 
