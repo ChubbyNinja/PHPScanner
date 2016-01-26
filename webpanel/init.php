@@ -11,7 +11,7 @@ if (isset($_POST['phpsc_action'])) {
     switch ($_POST['phpsc_action']) {
 
         case 'login':
-            if( !$Webpanel->is_authenticated() ) {
+            if (!$Webpanel->is_authenticated()) {
                 $Webpanel->try_authenticate($this->get_action('web_password'), $_POST['phpsc_password']);
             }
             break;

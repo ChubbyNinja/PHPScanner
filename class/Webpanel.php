@@ -41,7 +41,7 @@ class Webpanel extends PHPScanner
 
         $this->set_authenticated(true);
 
-        $hash = $this->random_str( 32 );
+        $hash = $this->random_str(32);
         $db = parent::get_db_connection();
 
         $sql = "INSERT INTO `phpsc_session` (`ip`,`hash`) VALUES(:ip,:hash)";
@@ -60,9 +60,9 @@ class Webpanel extends PHPScanner
             return;
         }
 
-        list( $id, $hash ) = explode('-', $_COOKIE['phpsc_web']);
+        list($id, $hash) = explode('-', $_COOKIE['phpsc_web']);
 
-        if( strlen($hash) != 32 ) {
+        if (strlen($hash) != 32) {
             $this->set_authenticated(false);
             return;
         }
@@ -70,18 +70,15 @@ class Webpanel extends PHPScanner
         $db = parent::get_db_connection();
 
         $sql = "SELECT * FROM `phpsc_session` WHERE `hash`=:hash LIMIT 1";
-        $session = $db->run_sql( $sql, array(':hash'=>$hash) , 'fetch' );
+        $session = $db->run_sql($sql, array(':hash'=>$hash), 'fetch');
 
-        if( $session['ip'] == parent::get_real_ip() ){
+        if ($session['ip'] == parent::get_real_ip()) {
             $this->set_authenticated(true);
             return;
         }
 
         $this->set_authenticated(false);
         return;
-
-
-
     }
 
 
@@ -92,8 +89,7 @@ class Webpanel extends PHPScanner
 
     public function logout()
     {
-
-        list( $id, $hash ) = explode('-', $_COOKIE['phpsc_web']);
+        list($id, $hash) = explode('-', $_COOKIE['phpsc_web']);
 
         setcookie('phpsc_web', false, -3600);
         $this->set_authenticated(false);
@@ -101,7 +97,7 @@ class Webpanel extends PHPScanner
         $db = parent::get_db_connection();
 
         $sql = "DELETE FROM `phpsc_session` WHERE `hash`=:hash";
-        $db->run_sql( $sql, array(':hash'=>$hash) , false );
+        $db->run_sql($sql, array(':hash'=>$hash), false);
 
         return true;
     }
