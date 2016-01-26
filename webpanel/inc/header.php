@@ -19,7 +19,26 @@
 
     <div class="row">
         <header class="large-12 column">
-            <div class="logo"><h1>PHPScanner <em>v<?=$this->get_phpsc_version()?></em></h1> <h5>Scanning your user uploads, so you don't have to worry!</h5></div>
+            <div class="row">
+                <div class="small-12 large-6 columns">
+                    <div class="logo"><h1>PHPScanner <em>v<?=$this->get_phpsc_version()?></em></h1> <h5>Scanning your user uploads, so you don't have to worry!</h5></div>
+                </div>
+                <div class="small-12 large-6 columns">
+
+                    <?php
+                    if( $Webpanel->is_authenticated() )
+                    {
+                        ?>
+                        <ul class="menu">
+                            <li><a href="?phpsc&phpsc_action=dashboard">Dashboard</a></li>
+                            <li><a href="?phpsc&phpsc_action=logout">Logout</a></li>
+                        </ul>
+                        <?php
+                    }
+                    ?>
+                </div>
+            </div>
+
         </header>
     </div>
 

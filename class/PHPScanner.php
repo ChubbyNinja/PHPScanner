@@ -1,14 +1,5 @@
 <?php
 
-    /**
-     * Created for PHPScanner
-     * User: Danny Hearnah
-     * Author: ChubbyNinja
-     * URL: https://github.com/ChubbyNinja/PHPScanner.
-     *
-     * Date: 28/04/2015
-     * Time: 15:30
-     */
     class PHPScanner
     {
         /**

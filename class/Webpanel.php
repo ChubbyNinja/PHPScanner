@@ -7,14 +7,6 @@
  * URL: https://github.com/ChubbyNinja/PHPScanner
  */
 
-/**
- * Created for PHPScanner
- * User: Danny Hearnah
- * Author: Skyblue Creations Ltd.
- *
- * Date: 1/19/2016
- * Time: 10:34 AM
- */
 class Webpanel extends PHPScanner
 {
     private $authenticated = false;
@@ -48,22 +40,70 @@ class Webpanel extends PHPScanner
         }
 
         $this->set_authenticated(true);
-        setcookie('phpsc_web', 1, 0);
+
+        $hash = $this->random_str( 32 );
+        $db = parent::get_db_connection();
+
+        $sql = "INSERT INTO `phpsc_session` (`ip`,`hash`) VALUES(:ip,:hash)";
+        $arr = array(':ip'=>parent::get_real_ip(), ':hash'=>$hash);
+
+        $id = $db->run_sql($sql, $arr, 'lastInsertId');
+        setcookie('phpsc_web', $id.'-'.$hash, 0);
 
         return true;
     }
 
     public function check_authenticated()
     {
-        if (isset($_COOKIE['phpsc_web'])) {
-            $this->set_authenticated(true);
+        if (!isset($_COOKIE['phpsc_web'])) {
+            $this->set_authenticated(false);
+            return;
         }
+
+        list( $id, $hash ) = explode('-', $_COOKIE['phpsc_web']);
+
+        if( strlen($hash) != 32 ) {
+            $this->set_authenticated(false);
+            return;
+        }
+
+        $db = parent::get_db_connection();
+
+        $sql = "SELECT * FROM `phpsc_session` WHERE `hash`=:hash LIMIT 1";
+        $session = $db->run_sql( $sql, array(':hash'=>$hash) , 'fetch' );
+
+        if( $session['ip'] == parent::get_real_ip() ){
+            $this->set_authenticated(true);
+            return;
+        }
+
+        $this->set_authenticated(false);
+        return;
+
+
+
+    }
+
+
+    private function random_str($length)
+    {
+        return substr(sha1(rand()), 0, $length);
     }
 
     public function logout()
     {
+
+        list( $id, $hash ) = explode('-', $_COOKIE['phpsc_web']);
+
         setcookie('phpsc_web', false, -3600);
         $this->set_authenticated(false);
+
+        $db = parent::get_db_connection();
+
+        $sql = "DELETE FROM `phpsc_session` WHERE `hash`=:hash";
+        $db->run_sql( $sql, array(':hash'=>$hash) , false );
+
+        return true;
     }
 
     public function sanitize($input)

@@ -1,14 +1,3 @@
-<?php
-/**
- * Created for PHPScanner
- * User: Danny Hearnah
- * Author: Skyblue Creations Ltd.
- *
- * Date: 1/19/2016
- * Time: 12:00 PM
- */
-?>
-
 <div class="large-12 column">
 <div class="info-box">
     <h1>PHPSC Vault</h1>

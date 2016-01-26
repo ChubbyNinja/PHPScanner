@@ -105,3 +105,7 @@ a.info-icon {
 pre.modal-code {
     font-size:10px;
 }
+
+.menu {
+    float:right;
+}

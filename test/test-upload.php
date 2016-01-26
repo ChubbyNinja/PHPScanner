@@ -1,13 +1,3 @@
-<?php
-/**
- * Created for PHPScanner
- * User: Danny Hearnah
- * Author: Skyblue Creations Ltd.
- *
- * Date: 1/15/2016
- * Time: 2:52 PM
- */
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
