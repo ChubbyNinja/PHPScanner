@@ -26,14 +26,14 @@
                 <div class="small-12 large-6 columns">
 
                     <?php
-                    if( $Webpanel->is_authenticated() )
-                    {
+                    if ($Webpanel->is_authenticated()) {
                         ?>
                         <ul class="menu">
                             <li><a href="?phpsc&phpsc_action=dashboard">Dashboard</a></li>
                             <li><a href="?phpsc&phpsc_action=logout">Logout</a></li>
                         </ul>
                         <?php
+
                     }
                     ?>
                 </div>
