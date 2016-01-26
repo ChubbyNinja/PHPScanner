@@ -1,0 +1,5 @@
+<IfModule mod_env.c>
+    # Disable PHPScanner for a specific area or website by enabling this
+    # Requires mod_env being loaded
+    #SetEnv PHPSC_DISABLE true
+</IfModule>
