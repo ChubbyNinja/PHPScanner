@@ -16,12 +16,15 @@
 
         if ($items) {
             foreach ($items as $item) {
+
+                $date = new DateTime( $item['date'] );
+
                 $file = json_decode($item['file']);
                 $threat = json_decode($item['threat']);
                 ?>
                 <tr>
-                    <td><?=date('jS F Y', strtotime($item['date']))?></td>
-                    <td><?=$item['ip']?></td>
+                    <td><?=$date->format('r')?></td>
+                    <td><a href="http://geomaplookup.net/?ip=<?=$item['ip']?>" target="_blank"><?=$item['ip']?> <i class="fa fa-external-link"></i></a></td>
                     <td><?=$file->name?></td>
                     <td><?=$threat[0]->vun_string?></td>
                     <td>

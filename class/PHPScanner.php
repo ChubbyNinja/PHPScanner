@@ -70,11 +70,13 @@
 
             require PHPSC_ROOT.'/conf.php';
 
-            /*
-             * WARNING: YOU SHOULD NOT EDIT THIS FUNCTION - EDIT CONFIG IN conf.php
-             */
-            $notify_default = array('level' => 1, 'email' => 'root@localhost', 'subject' => 'PUP Found on '.$_SERVER['SERVER_NAME']);
-            $action_default = array('level' => 1, 'iptables' => false, 'iptables_string' => 'iptables -I INPUT -s %s -j DROP', 'threshold' => 3);
+            $notify_default = $notify;
+            $action_default = $action;
+
+
+            if( file_exists( PHPSC_ROOT .'/conf.custom.php') ) {
+                require PHPSC_ROOT .'/conf.custom.php';
+            }
 
             $this->set_notify(array_merge($notify_default, $notify));
             $this->set_action(array_merge($action_default, $action));

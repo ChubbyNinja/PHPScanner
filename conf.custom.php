@@ -1,0 +1,7 @@
+<?php
+
+/**
+ *
+ * OVERWRITE DEFAULT CONFIG VARIABLES HERE
+ *
+ */
