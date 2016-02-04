@@ -74,7 +74,7 @@
             $action_default = $action;
 
 
-            if( file_exists( PHPSC_ROOT .'/conf.custom.php') ) {
+            if (file_exists(PHPSC_ROOT .'/conf.custom.php')) {
                 require PHPSC_ROOT .'/conf.custom.php';
             }
 
