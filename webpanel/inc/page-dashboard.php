@@ -17,8 +17,7 @@
 
         if ($items) {
             foreach ($items as $item) {
-
-                $date = new DateTime( $item['date'] );
+                $date = new DateTime($item['date']);
 
                 $file = json_decode($item['file']);
                 $threat = json_decode($item['threat']);
