@@ -9,6 +9,11 @@ window.onload = function(){
     }
 
     $(document).foundation();
+
+
+    $('.ban-ip-address').on('click', function () {
+        return confirm('Are you sure you want to block: ' + "\n\n" + $(this).attr('data-ip') +'?');
+    });
 };
 
 

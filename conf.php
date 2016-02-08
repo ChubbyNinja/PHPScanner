@@ -76,7 +76,7 @@ $action['iptables'] = false; /* working in 1.2 release */
  *  IPTABLES input string, %s is a placeholder for clients IP address, do not remove
  *  WARNING: ALTER AT OWN RISK
  */
-$action['iptables_string'] = 'iptables -I INPUT -s %s -j DROP'; /* working in 1.2 release */
+$action['iptables_string'] = 'iptables -I INPUT -s %s -j DROP 2>&1'; /* working in 1.2 release */
 
 /* @var $action['ip_whitelist']
  *  IPTABLES will not add any of the follow IP addresses - this is a failsafe against IP spoofing.

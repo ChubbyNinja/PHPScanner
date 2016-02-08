@@ -5,6 +5,7 @@
         <thead>
             <th>Date</th>
             <th>IP</th>
+            <th>BanIP</th>
             <th>File</th>
             <th>Threat</th>
             <th>Info</th>
@@ -24,7 +25,27 @@
                 ?>
                 <tr>
                     <td><?=$date->format('r')?></td>
-                    <td><a href="http://geomaplookup.net/?ip=<?=$item['ip']?>" target="_blank"><?=$item['ip']?> <i class="fa fa-external-link"></i></a></td>
+                    <td>
+                        <a href="http://geomaplookup.net/?ip=<?=$item['ip']?>" target="_blank"><?=$item['ip']?> <i class="fa fa-external-link"></i></a>
+                    </td>
+                    <td class="text-center">
+                        <?php
+                        if( $item['status'] == 'pending' ) {
+                            ?>
+                            <i class="fa fa-clock-o" title="Waiting for cronjob to block this IP"></i>
+                            <?php
+                        } elseif( $item['status'] == 'blocked' ) {
+                            ?>
+                            <i class="fa fa-check" title="IP Blocked"></i>
+                            <?php
+                        } else {
+                            ?>
+                            <a href="?phpsc&phpsc_action=banip&phpsc_ip=<?= $item['ip'] ?>" class="ban-ip-address" data-ip="<?=$item['ip']?>"><i
+                                    class="fa fa-ban"></i></a>
+                            <?php
+                        }
+                        ?>
+                    </td>
                     <td><?=$file->name?></td>
                     <td><?=$threat[0]->vun_string?></td>
                     <td>

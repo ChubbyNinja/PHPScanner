@@ -115,7 +115,9 @@ class Webpanel extends PHPScanner
     {
         $db = parent::get_db_connection();
 
-        $sql = 'SELECT * FROM `phpsc_vault` ORDER BY `id` DESC';
+        $sql = 'SELECT `vault`.*, `banip`.`status` FROM `phpsc_vault` AS `vault` '.
+            ' LEFT JOIN `phpsc_banip` AS `banip` ON `banip`.`ip` = `vault`.`ip` ' .
+            ' ORDER BY `id` DESC ';
 
         return $db->run_sql($sql);
     }
@@ -150,5 +152,14 @@ class Webpanel extends PHPScanner
             readfile($file->phpsc_vault);
             exit;
         }
+    }
+
+    public function ban_ip($ip)
+    {
+        $db = parent::get_db_connection();
+
+        $sql = "INSERT INTO `phpsc_banip` (`ip`) VALUES( :ip ) ";
+
+        $db->run_sql($sql, array(':ip'=>$ip), false );
     }
 }

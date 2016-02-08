@@ -109,3 +109,7 @@ pre.modal-code {
 .menu {
     float:right;
 }
+
+.ban-ip-address {
+    color:#b90000;
+}

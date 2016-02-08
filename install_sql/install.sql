@@ -3,16 +3,35 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 26, 2016 at 12:28 PM
--- Server version: 5.6.27-0ubuntu0.15.04.1
+-- Generation Time: Feb 08, 2016 at 11:10 AM
+-- Server version: 5.6.28-0ubuntu0.15.04.1
 -- PHP Version: 5.6.4-4ubuntu6.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
 --
 -- Database: `phpsc`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phpsc_banip`
+--
+
+CREATE TABLE IF NOT EXISTS `phpsc_banip` (
+`id` int(11) NOT NULL,
+  `ip` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('pending','blocked') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -25,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `phpsc_session` (
   `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   `hash` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -40,11 +59,17 @@ CREATE TABLE IF NOT EXISTS `phpsc_vault` (
   `file` text COLLATE utf8_unicode_ci NOT NULL,
   `threat` text COLLATE utf8_unicode_ci NOT NULL,
   `server_details` text COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `phpsc_banip`
+--
+ALTER TABLE `phpsc_banip`
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `phpsc_session`
@@ -63,12 +88,20 @@ ALTER TABLE `phpsc_vault`
 --
 
 --
+-- AUTO_INCREMENT for table `phpsc_banip`
+--
+ALTER TABLE `phpsc_banip`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=0;
+--
 -- AUTO_INCREMENT for table `phpsc_session`
 --
 ALTER TABLE `phpsc_session`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=0;
 --
 -- AUTO_INCREMENT for table `phpsc_vault`
 --
 ALTER TABLE `phpsc_vault`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=0;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
