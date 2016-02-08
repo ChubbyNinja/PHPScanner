@@ -160,6 +160,6 @@ class Webpanel extends PHPScanner
 
         $sql = "INSERT INTO `phpsc_banip` (`ip`) VALUES( :ip ) ";
 
-        $db->run_sql($sql, array(':ip'=>$ip), false );
+        $db->run_sql($sql, array(':ip'=>$ip), false);
     }
 }

@@ -201,7 +201,7 @@
                     break;
 
                 case 'cron-banip':
-                    $this->ban_ip( 'cronjob' );
+                    $this->ban_ip('cronjob');
                     break;
             }
         }
@@ -735,16 +735,15 @@ print_r($_SERVER);
         }
 
 
-        public function ban_ip( $type )
+        public function ban_ip($type)
         {
-            if( $type == 'cronjob' )
-            {
+            if ($type == 'cronjob') {
                 $db = $this->get_db_connection();
 
                 $sql = "SELECT * FROM `phpsc_banip` WHERE `status`='pending'";
                 $ip_list = $db->run_sql($sql, array(), 'fetchAll');
 
-                if( !$ip_list ) {
+                if (!$ip_list) {
                     die();
                 }
 
@@ -752,24 +751,20 @@ print_r($_SERVER);
 
                 $whitelist = $this->get_action('ip_whitelist');
 
-                foreach( $ip_list as $entry )
-                {
+                foreach ($ip_list as $entry) {
                     /* if IP is in our whitelist, do not ban */
-                    if( in_array( $entry['ip'], $whitelist) ){
+                    if (in_array($entry['ip'], $whitelist)) {
                         continue;
                     }
 
-                    $string = sprintf( $iptables, $entry['ip'] );
-                    $result = shell_exec( $string );
+                    $string = sprintf($iptables, $entry['ip']);
+                    $result = shell_exec($string);
 
-                    if( !$result ) {
-
+                    if (!$result) {
                         $sql = "UPDATE `phpsc_banip` SET `status`='blocked' WHERE `id` = :id ";
                         $db->run_sql($sql, array(':id' => $entry['id']), false);
-
                     }
                 }
-
             }
         }
 

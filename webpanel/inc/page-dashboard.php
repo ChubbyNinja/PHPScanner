@@ -29,21 +29,24 @@
                     </td>
                     <td class="text-center">
                         <?php
-                        if( $item['status'] == 'pending' ) {
+                        if ($item['status'] == 'pending') {
                             ?>
                             <i class="fa fa-clock-o" title="Waiting for cronjob to block this IP"></i>
                             <?php
-                        } elseif( $item['status'] == 'blocked' ) {
+
+                        } elseif ($item['status'] == 'blocked') {
                             ?>
                             <i class="fa fa-check" title="IP Blocked"></i>
                             <?php
+
                         } else {
                             ?>
                             <a href="?phpsc&phpsc_action=banip&phpsc_ip=<?= $item['ip'] ?>" class="ban-ip-address" data-ip="<?=$item['ip']?>"><i
                                     class="fa fa-ban"></i></a>
                             <?php
+
                         }
-                        ?>
+                ?>
                     </td>
                     <td><?=$file->name?></td>
                     <td><?=$threat[0]->vun_string?></td>
