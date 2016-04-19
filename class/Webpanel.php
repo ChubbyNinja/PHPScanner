@@ -74,8 +74,8 @@ class Webpanel extends PHPScanner
 
     private function check_page()
     {
-        if( isset( $_GET['phpsc_page'] ) ) {
-            $this->set_page( (int)$_GET['phpsc_page'] );
+        if (isset($_GET['phpsc_page'])) {
+            $this->set_page((int)$_GET['phpsc_page']);
         }
     }
 
@@ -174,23 +174,23 @@ class Webpanel extends PHPScanner
         return $content;
     }
 
-    public function get_vault( $status = false )
+    public function get_vault($status = false)
     {
         $db = parent::get_db_connection();
 
         $where = ' WHERE 1=1 ';
 
-        if( $status ) {
-            switch( $status ) {
-                case 'blocked' :
+        if ($status) {
+            switch ($status) {
+                case 'blocked':
                     $where .= " AND `banip`.`status` ='blocked' ";
                     break;
 
-                case 'pending' :
+                case 'pending':
                     $where .= " AND `banip`.`status` ='pending' ";
                     break;
 
-                case 'unbanned' :
+                case 'unbanned':
                     $where .= " AND `banip`.`status` IS NULL ";
                     break;
             }
@@ -205,9 +205,9 @@ class Webpanel extends PHPScanner
         $results = $db->run_sql($sql);
 
         $sql = "SELECT FOUND_ROWS() AS total;";
-        $total = $db->run_sql( $sql );
-        $this->set_vault_size( $total[0]['total'] );
-        $this->set_total_pages( ceil($total[0]['total']/ parent::get_action('web_perpage')) );
+        $total = $db->run_sql($sql);
+        $this->set_vault_size($total[0]['total']);
+        $this->set_total_pages(ceil($total[0]['total']/ parent::get_action('web_perpage')));
 
         return $results;
     }
