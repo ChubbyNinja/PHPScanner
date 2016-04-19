@@ -113,3 +113,21 @@ pre.modal-code {
 .ban-ip-address {
     color:#b90000;
 }
+
+
+.menu .active {
+    font-weight:700;
+}
+
+.pagination {
+    margin-top:1rem;
+}
+
+.pagination li.current-page {
+    background-color: #eee;
+}
+
+.pagination li.disabled a {
+    font-weight: normal;
+    opacity: 0.4;
+}

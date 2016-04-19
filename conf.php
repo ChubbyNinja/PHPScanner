@@ -141,3 +141,10 @@ $action['mysql_host'] = 'localhost';
 $action['mysql_user'] = 'phpsc';
 $action['mysql_pass'] = 'changeme';
 $action['mysql_db'] = 'phpsc';
+
+/* @var $action['web_perpage']
+ *  Items per page to show
+ *  integar
+ *  Default: 20
+ */
+$action['web_perpage'] = 20;
