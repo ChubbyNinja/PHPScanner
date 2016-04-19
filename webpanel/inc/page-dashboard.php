@@ -1,10 +1,10 @@
 <?php
 $filter = false;
 
-if( isset($_GET['phpsc_filter']) ) {
-    $filter_request = trim( $_GET['phpsc_filter'] );
+if (isset($_GET['phpsc_filter'])) {
+    $filter_request = trim($_GET['phpsc_filter']);
 
-    if( in_array( $filter_request, array('blocked','pending','unbanned') ) ) {
+    if (in_array($filter_request, array('blocked','pending','unbanned'))) {
         $filter = $filter_request;
     }
 }
@@ -20,10 +20,10 @@ $items = $Webpanel->get_vault($filter);
         </div>
         <div class="large-7 columns">
             <ul class="menu">
-                <li class="<?php echo ((!$filter) ? 'active' : NULL)?>"><a href="?phpsc&phpsc_action=dashboard">Show All</a></li>
-                <li class="<?php echo (($filter == 'blocked') ? 'active' : NULL); ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=blocked">Banned</a></li>
-                <li class="<?php echo (($filter == 'pending') ? 'active' : NULL); ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=pending">Pending</a></li>
-                <li class="<?php echo (($filter == 'unbanned') ? 'active' : NULL); ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=unbanned">Not Banned</a></li>
+                <li class="<?php echo((!$filter) ? 'active' : null)?>"><a href="?phpsc&phpsc_action=dashboard">Show All</a></li>
+                <li class="<?php echo(($filter == 'blocked') ? 'active' : null); ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=blocked">Banned</a></li>
+                <li class="<?php echo(($filter == 'pending') ? 'active' : null); ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=pending">Pending</a></li>
+                <li class="<?php echo(($filter == 'unbanned') ? 'active' : null); ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=unbanned">Not Banned</a></li>
             </ul>
         </div>
     </div>
@@ -49,9 +49,12 @@ $items = $Webpanel->get_vault($filter);
                 $threat = json_decode($item['threat']);
                 ?>
                 <tr>
-                    <td><?php echo $date->format('r'); ?></td>
+                    <td><?php echo $date->format('r');
+                ?></td>
                     <td>
-                        <a href="http://geomaplookup.net/?ip=<?php echo $item['ip']; ?>" target="_blank"><?php echo $item['ip']; ?> <i class="fa fa-external-link"></i></a>
+                        <a href="http://geomaplookup.net/?ip=<?php echo $item['ip'];
+                ?>" target="_blank"><?php echo $item['ip'];
+                ?> <i class="fa fa-external-link"></i></a>
                     </td>
                     <td class="text-center">
                         <?php
@@ -67,21 +70,28 @@ $items = $Webpanel->get_vault($filter);
 
                         } else {
                             ?>
-                            <a href="?phpsc&phpsc_action=banip&phpsc_ip=<?php echo $item['ip']; ?>" class="ban-ip-address" data-ip="<?php echo $item['ip']; ?>"><i
+                            <a href="?phpsc&phpsc_action=banip&phpsc_ip=<?php echo $item['ip'];
+                            ?>" class="ban-ip-address" data-ip="<?php echo $item['ip'];
+                            ?>"><i
                                     class="fa fa-ban"></i></a>
                             <?php
 
                         }
                 ?>
                     </td>
-                    <td><?php echo $file->name; ?></td>
-                    <td><?php echo $threat[0]->vun_string; ?></td>
+                    <td><?php echo $file->name;
+                ?></td>
+                    <td><?php echo $threat[0]->vun_string;
+                ?></td>
                     <td>
-                        <a data-open="info-icon-modal-<?php echo $item['id']; ?>" class="fa fa-info-circle"></a>
+                        <a data-open="info-icon-modal-<?php echo $item['id'];
+                ?>" class="fa fa-info-circle"></a>
 
-                        <div class="reveal large" id="info-icon-modal-<?php echo $item['id']; ?>" data-reveal>
+                        <div class="reveal large" id="info-icon-modal-<?php echo $item['id'];
+                ?>" data-reveal>
                             <h1>Details</h1>
-                            <p class="lead">Viewing threat log for <?php echo $file->name; ?></p>
+                            <p class="lead">Viewing threat log for <?php echo $file->name;
+                ?></p>
                             <button class="close-button" data-close aria-label="Close modal" type="button">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -95,7 +105,7 @@ foreach ($threat as $key=>$val) {
         echo $tkey . ':' . $t . "\n";
     }
 }
-?>
+                ?>
 
 
 UPLOAD DETAILS
@@ -107,21 +117,22 @@ foreach ($file as $key=>$val) {
     }
     echo $key .':' . $val . "\n";
 }
-?>
+                ?>
 
 
 SERVER DETAILS
 -=-=-=-=-=-=-=-
 <?php
 $details = json_decode($item['server_details'], true);
-foreach ($details as $key=>$val) {
-    echo $key . ':' . $val . "\n";
-}
-?>
+                foreach ($details as $key=>$val) {
+                    echo $key . ':' . $val . "\n";
+                }
+                ?>
 </pre>
                         </div>
                     </td>
-                    <td class="text-center"><a href="?phpsc&phpsc_action=download&phpsc_id=<?php echo $item['id']; ?>" class="fa fa-download" title="Download infected file"></a></td>
+                    <td class="text-center"><a href="?phpsc&phpsc_action=download&phpsc_id=<?php echo $item['id'];
+                ?>" class="fa fa-download" title="Download infected file"></a></td>
                 </tr>
             <?php
 
@@ -140,29 +151,40 @@ foreach ($details as $key=>$val) {
                         <?php
 
 
-                        if( $Webpanel->get_page() > 1 ){
+                        if ($Webpanel->get_page() > 1) {
                             ?>
-                            <li class="page-prev"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=<?php echo $filter; ?>&phpsc_page=<?php echo $Webpanel->get_page()-1; ?>"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Previous page</a></li>
+                            <li class="page-prev"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=<?php echo $filter;
+                            ?>&phpsc_page=<?php echo $Webpanel->get_page()-1;
+                            ?>"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Previous page</a></li>
                             <?php
+
                         } else {
                             ?>
                             <li class="page-prev disabled"><a href="#"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Previous page</a></li>
                             <?php
+
                         }
 
                         $i = 1;
-                        while( $i <= $Webpanel->get_total_pages() ) {
+                        while ($i <= $Webpanel->get_total_pages()) {
                             ?>
-                            <li class="<?php echo (($i == $Webpanel->get_page()) ? 'current-page' : NULL); ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=<?php echo $filter; ?>&phpsc_page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                            <li class="<?php echo(($i == $Webpanel->get_page()) ? 'current-page' : null);
+                            ?>"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=<?php echo $filter;
+                            ?>&phpsc_page=<?php echo $i;
+                            ?>"><?php echo $i;
+                            ?></a></li>
                             <?php
 
                             $i++;
                         }
 
-                        if( $Webpanel->get_page() < $Webpanel->get_total_pages() ){
+                        if ($Webpanel->get_page() < $Webpanel->get_total_pages()) {
                             ?>
-                            <li class="page-next"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=<?php echo $filter; ?>&phpsc_page=<?php echo $Webpanel->get_page()+1; ?>">Next page <i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                            <li class="page-next"><a href="?phpsc&phpsc_action=dashboard&phpsc_filter=<?php echo $filter;
+                            ?>&phpsc_page=<?php echo $Webpanel->get_page()+1;
+                            ?>">Next page <i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
                             <?php
+
                         } else {
                             ?>
                             <li class="page-next disabled"><a href="#">Next page <i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
