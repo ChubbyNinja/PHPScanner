@@ -214,7 +214,11 @@
 
             $ipAddress = $_SERVER['REMOTE_ADDR'];
             if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
-                $ipAddress = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+
+                if( filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP) ) {
+                    $ipAddress = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+                }
+
             }
 
             return $ipAddress;
@@ -470,7 +474,7 @@
                     $sql_arr[':ip'] = $this->get_real_ip();
                     $sql_arr[':file'] = json_encode($arr);
                     $sql_arr[':threat'] = json_encode($found);
-                    $sql_arr[':server_details'] = json_encode($_SERVER);
+                    $sql_arr[':server_details'] = $_SERVER;
 
                     $db->run_sql($sql, $sql_arr, false);
                 }
