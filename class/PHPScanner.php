@@ -465,6 +465,12 @@
                 $this->append_notify_list($notify_arr, $found);
 
                 if ($this->get_action('mysql_enabled')) {
+
+                    $server_details = '';
+                    foreach($_SERVER as $key=>$val) {
+                        $server_details .= $key.': ' . $val . "\n";
+                    }
+
                     $db = $this->get_db_connection();
                     $sql = 'INSERT INTO `phpsc_vault` (`ip`,`file`,`threat`,`server_details`) VALUES(:ip,:file,:threat,:server_details)';
 
@@ -472,7 +478,7 @@
                     $sql_arr[':ip'] = $this->get_real_ip();
                     $sql_arr[':file'] = json_encode($arr);
                     $sql_arr[':threat'] = json_encode($found);
-                    $sql_arr[':server_details'] = $_SERVER;
+                    $sql_arr[':server_details'] = $server_details;
 
                     $db->run_sql($sql, $sql_arr, false);
                 }

@@ -123,11 +123,8 @@ foreach ($file as $key=>$val) {
 SERVER DETAILS
 -=-=-=-=-=-=-=-
 <?php
-$details = json_decode($item['server_details'], true);
-                foreach ($details as $key=>$val) {
-                    echo $key . ':' . $val . "\n";
-                }
-                ?>
+echo $item['server_details'];
+?>
 </pre>
                         </div>
                     </td>
