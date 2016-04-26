@@ -124,7 +124,7 @@ SERVER DETAILS
 -=-=-=-=-=-=-=-
 <?php
 echo $item['server_details'];
-?>
+                ?>
 </pre>
                         </div>
                     </td>
