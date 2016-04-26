@@ -465,9 +465,8 @@
                 $this->append_notify_list($notify_arr, $found);
 
                 if ($this->get_action('mysql_enabled')) {
-
                     $server_details = '';
-                    foreach($_SERVER as $key=>$val) {
+                    foreach ($_SERVER as $key=>$val) {
                         $server_details .= $key.': ' . $val . "\n";
                     }
 
