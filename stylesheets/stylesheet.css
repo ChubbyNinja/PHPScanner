@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700);
+
 * {
   box-sizing: border-box; }
 
@@ -112,6 +114,7 @@ a {
   margin-top: 2rem;
   margin-bottom: 1rem;
   font-weight: normal;
+  font-family: 'Ubuntu Mono';
   color: #159957; }
 .main-content p {
   margin-bottom: 1em; }
