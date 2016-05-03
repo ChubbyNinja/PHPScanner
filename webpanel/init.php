@@ -34,7 +34,7 @@ if (isset($_GET['phpsc_action']) && $Webpanel->is_authenticated()) {
 
         case 'banip':
             $Webpanel->ban_ip($_GET['phpsc_ip']);
-            header('Location: ?phpsc');
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
             die();
             break;
 
