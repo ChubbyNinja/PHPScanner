@@ -101,10 +101,10 @@ THREAT DETAILS
 -=-=-=-=-=-=-=-
 <?php
 foreach ($threat as $key=>$val) {
-    foreach ($val as $tkey=>$t) {
-        echo $tkey . ':' . $t . "\n";
-    }
-}
+                    foreach ($val as $tkey=>$t) {
+                        echo $tkey . ':' . $t . "\n";
+                    }
+                }
                 ?>
 
 
@@ -112,11 +112,11 @@ UPLOAD DETAILS
 -=-=-=-=-=-=-=-
 <?php
 foreach ($file as $key=>$val) {
-    if (!is_string($val)) {
-        continue;
-    }
-    echo $key .':' . $val . "\n";
-}
+                    if (!is_string($val)) {
+                        continue;
+                    }
+                    echo $key .':' . $val . "\n";
+                }
                 ?>
 
 
