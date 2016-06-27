@@ -14,6 +14,9 @@ class Webpanel extends PHPScanner
     private $page = 1;
     private $total_pages = 1;
 
+    /**
+     * Webpanel constructor.
+     */
     public function __construct()
     {
         parent::load_config();

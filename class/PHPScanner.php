@@ -23,7 +23,7 @@
          */
         private $silent_mode = false;
 
-        private $phpsc_version = '1.0.3';
+        private $phpsc_version = '1.0.4a';
 
         private $notify = array();
         private $action = array();
