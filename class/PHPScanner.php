@@ -615,32 +615,32 @@ print_r($_SERVER);
         }
 
 
-        private function alert_phphq($found){
+        private function alert_phphq($found)
+        {
             $api_key = '';
 
-            $post_data = [
+            $post_data = array(
                 'api_key' => $api_key,
                 'ip_address' => '',
-                'attack' => [
+                'attack' => array(
                     'ip_address' => $this->get_real_ip(),
                     'date' => time(),
                     'type' => 'file_upload',
                     'string' => $found
-                ]
-            ];
+                )
+            );
 
-            $json_data = json_encode( $post_data );
+            $json_data = json_encode($post_data);
 
             $ch = curl_init();
 
-            curl_setopt($ch, CURLOPT_URL,            "http://phpf.us/hq/home" );
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
-            curl_setopt($ch, CURLOPT_POST,           1 );
-            curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data );
-            curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: text/plain', 'phpfus-apikey: 36c696caa2156c2fbcdeb6b292ac997e'));
+            curl_setopt($ch, CURLOPT_URL, "http://phpf.us/hq/home");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/plain', 'phpfus-apikey: 36c696caa2156c2fbcdeb6b292ac997e'));
 
-            $result=curl_exec ($ch);
-
+            $result=curl_exec($ch);
         }
 
         /**
