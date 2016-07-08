@@ -247,6 +247,41 @@ class Webpanel extends PHPScanner
         }
     }
 
+    public function manual_alert_phphq($id) {
+        $item = $this->get_vault_item($id);
+        $api_key = '';
+
+        $file = json_decode($item['file']);
+        $threat = json_decode($item['threat']);
+
+        $post_data = [
+            'api_key' => $api_key,
+            'ip_address' => '',
+            'attack' => [
+                'ip_address' => $item['ip'],
+                'date' => strtotime($item['date']),
+                'type' => 'file_upload',
+                'string' => $file->name . '/' . $threat[0]->vun_string,
+                'filename' => $file->name
+            ]
+        ];
+
+        print_r($post_data);
+        die();
+
+        $json_data = json_encode( $post_data );
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL,            "http://phpf.us/hq/home" );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt($ch, CURLOPT_POST,           1 );
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data );
+        curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: text/plain', 'phpfus-apikey: 36c696caa2156c2fbcdeb6b292ac997e'));
+
+        $result=curl_exec ($ch);
+    }
+
     public function ban_ip($ip)
     {
         $db = parent::get_db_connection();

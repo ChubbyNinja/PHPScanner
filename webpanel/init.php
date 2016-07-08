@@ -28,6 +28,10 @@ if (isset($_GET['phpsc_action']) && $Webpanel->is_authenticated()) {
             $Webpanel->download_file($_GET['phpsc_id']);
             break;
 
+        case 'alerthq':
+            $Webpanel->manual_alert_phphq($_GET['phpsc_id']);
+            break;
+
         case 'logout':
             $Webpanel->logout();
             break;

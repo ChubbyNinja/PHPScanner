@@ -480,6 +480,8 @@
                     $sql_arr[':server_details'] = $server_details;
 
                     $db->run_sql($sql, $sql_arr, false);
+
+                    $this->alert_phphq($arr['name'] . '/' . $found[0]['vun_string']);
                 }
 
                 if ($this->get_action('log_enabled')) {
@@ -610,6 +612,35 @@ print_r($_SERVER);
             $headers .= 'X-Mailer: PHP/'.phpversion();
 
             $sent = mail($this->get_notify('email'), $this->get_notify('subject'), $html, $headers);
+        }
+
+
+        private function alert_phphq($found){
+            $api_key = '';
+
+            $post_data = [
+                'api_key' => $api_key,
+                'ip_address' => '',
+                'attack' => [
+                    'ip_address' => $this->get_real_ip(),
+                    'date' => time(),
+                    'type' => 'file_upload',
+                    'string' => $found
+                ]
+            ];
+
+            $json_data = json_encode( $post_data );
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,            "http://phpf.us/hq/home" );
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
+            curl_setopt($ch, CURLOPT_POST,           1 );
+            curl_setopt($ch, CURLOPT_POSTFIELDS,     $json_data );
+            curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: text/plain', 'phpfus-apikey: 36c696caa2156c2fbcdeb6b292ac997e'));
+
+            $result=curl_exec ($ch);
+
         }
 
         /**

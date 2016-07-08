@@ -78,6 +78,7 @@ $items = $Webpanel->get_vault($filter);
 
                         }
                 ?>
+                        <a href="?phpsc&phpsc_action=alerthq&phpsc_id=<?php echo $item['id']; ?>">Alert HQ</a>
                     </td>
                     <td><?php echo $file->name;
                 ?></td>
